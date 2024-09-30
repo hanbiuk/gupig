@@ -1,0 +1,17 @@
+*.class
+target/
+*.iml
+*.ipr
+*.iws
+.idea/
+logs/
+.classpath
+.project
+.settings/
+.amateras
+/target*
+*.log*
+*.lock
+.DS_Store
+/*package.sh
+tmps/*

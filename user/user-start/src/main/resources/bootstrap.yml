@@ -1,0 +1,25 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: gupig-user
+
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+server:
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/plain
+  tomcat:
+    uri-encoding: UTF-8
+
+management:
+  endpoints:
+    web:
+      exposure:
+        exclude: '*'
