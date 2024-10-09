@@ -10,6 +10,7 @@
     <version>${revision}</version>
     <modules>
         <module>user-start</module>
+        <module>user-adapter</module>
 <!--        <module>user-app</module>-->
 <!--        <module>user-client</module>-->
 <!--        <module>user-domain</module>-->
@@ -36,6 +37,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.gupig.user</groupId>
+                <artifactId>user-adapter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
