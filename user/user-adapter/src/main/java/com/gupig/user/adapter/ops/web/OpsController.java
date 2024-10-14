@@ -1,5 +1,6 @@
-package com.gupig.user.web.ops;
+package com.gupig.user.adapter.ops.web;
 
+import com.gupig.user.client.common.dto.Result;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,24 +11,29 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * 健康检查接口
+ * 运维 前端控制器
  *
  * @author hanbiuk
  * @date 2024-10-09
  */
 @RestController
-@RequestMapping("user/ops/health")
-public class HealthController {
+@RequestMapping("user/ops")
+public class OpsController {
 
-    @GetMapping("")
-    public String runtime() {
+    /**
+     * 健康检查
+     *
+     * @return 服务已运行时间
+     */
+    @GetMapping("health")
+    public Result<String> health() {
         RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
         String localHost = "";
         try {
             localHost = InetAddress.getLocalHost().toString();
         } catch (UnknownHostException ignored) {
         }
-        return String.format("UserApplication on %s, has ran %s s", localHost, runtime.getUptime() / 1000);
+        return Result.success(String.format("UserApplication on %s, has ran %s s", localHost, runtime.getUptime() / 1000));
     }
 
 }

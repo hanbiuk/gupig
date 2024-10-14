@@ -11,18 +11,14 @@
     </parent>
 
     <groupId>com.gupig.user</groupId>
-    <artifactId>user-adapter</artifactId>
+    <artifactId>user-client</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>com.gupig.user</groupId>
-            <artifactId>user-client</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
+
 
 </project>
