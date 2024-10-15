@@ -2,6 +2,7 @@ package com.gupig.user.client.account.api;
 
 import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.client.common.dto.Result;
+import jakarta.validation.Valid;
 
 /**
  * 账号 服务类
@@ -17,7 +18,7 @@ public interface AccountService {
      * @param cmd 命令参数
      * @return 登陆凭证
      */
-    Result<String> logIn(AccountLogInCmd cmd);
+    Result<String> logIn(@Valid AccountLogInCmd cmd);
 
     /**
      * 登出

@@ -5,6 +5,7 @@ import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.client.common.dto.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * 账号 服务实现类
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
+@Validated
 public class AccountServiceImpl implements AccountService {
 
     /**
