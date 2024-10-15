@@ -1,7 +1,11 @@
 package com.gupig.user.adapter.account.web;
 
+import com.gupig.user.client.account.api.AccountService;
+import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.client.common.dto.Result;
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,14 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("user/account")
 public class AccountController {
 
+    @Resource
+    private AccountService accountService;
+
     /**
      * 登陆
      *
+     * @param cmd 命令参数
      * @return 登陆凭证
      */
     @PostMapping("log/in")
-    public Result<String> logIn() {
-        return Result.success("login");
+    public Result<String> logIn(@RequestBody AccountLogInCmd cmd) {
+        return accountService.logIn(cmd);
     }
 
     /**
@@ -32,7 +40,7 @@ public class AccountController {
      */
     @PostMapping("log/out")
     public Result<Boolean> logOut() {
-        return Result.success(true);
+        return accountService.logOut();
     }
 
     /**
@@ -42,7 +50,7 @@ public class AccountController {
      */
     @PostMapping("sign/up")
     public Result<Boolean> signUp() {
-        return Result.success(true);
+        return accountService.signUp();
     }
 
     /**
@@ -52,17 +60,17 @@ public class AccountController {
      */
     @PostMapping("sign/in")
     public Result<Boolean> signIn() {
-        return Result.success(true);
+        return accountService.signIn();
     }
 
     /**
-     * 销户
+     * 销号
      *
      * @return 是否成功
      */
     @PostMapping("sign/down")
     public Result<Boolean> signDown() {
-        return Result.success(true);
+        return accountService.signDown();
     }
 
 }

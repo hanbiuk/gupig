@@ -16,12 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>com.gupig.user</groupId>
-            <artifactId>user-client</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>user-app</artifactId>
         </dependency>
     </dependencies>
 
