@@ -28,6 +28,11 @@ public class Result<T> implements Serializable {
      */
     private T data;
 
+    /**
+     * 耗时
+     */
+    private Long cost;
+
     public void setResult(ResultStatusEnum resultStatusEnum) {
         this.code = resultStatusEnum.getCode();
         this.msg = resultStatusEnum.getMsg();
