@@ -37,17 +37,16 @@ public class ServiceAop {
     @Around("execution(* com.gupig.*.app.*.service.*.*(..))")
     public Object around(ProceedingJoinPoint pjp) {
         StringBuilder classAndMethod = new StringBuilder();
-        Class<?> returnType;
+        long startTime = System.currentTimeMillis();
+
+        // 1. 获取方法、返回参数类型
+        MethodSignature signature = (MethodSignature) pjp.getSignature();
+        Method method = signature.getMethod();
+        Class<?> currentClass = method.getDeclaringClass();
+        classAndMethod.append(currentClass.getName()).append("#").append(method.getName());
+        Class<?> returnType = signature.getReturnType();
+
         try {
-            long startTime = System.currentTimeMillis();
-
-            // 1. 获取方法、返回参数类型
-            MethodSignature signature = (MethodSignature) pjp.getSignature();
-            Method method = signature.getMethod();
-            Class<?> currentClass = method.getDeclaringClass();
-            classAndMethod.append(currentClass.getName()).append("#").append(method.getName());
-            returnType = signature.getReturnType();
-
             // 2. 打印参数
             this.logParam(pjp, classAndMethod);
 
@@ -70,16 +69,25 @@ public class ServiceAop {
         }
         // 7. 参数校验
         catch (ConstraintViolationException e) {
+            if (!Objects.equals(returnType, Result.class)) {
+                return null;
+            }
+
             List<String> violationMessageList = new ArrayList<>();
             for (ConstraintViolation<?> constraintViolation : e.getConstraintViolations()) {
                 violationMessageList.add(constraintViolation.getMessage());
             }
-            return Result.fail(ResultStatusEnum.PARAM_ERROR, violationMessageList.toString());
+            return Result.fail(ResultStatusEnum.PARAM_ERROR, violationMessageList.toString(), System.currentTimeMillis() - startTime);
         }
         // 8. 统一异常处理
         catch (Throwable throwable) {
             log.error("ServiceLogAop getClassAndMethod exception", throwable);
-            return Result.fail(ResultStatusEnum.SYSTEM_ERROR);
+
+            if (!Objects.equals(returnType, Result.class)) {
+                return null;
+            }
+
+            return Result.fail(ResultStatusEnum.SYSTEM_ERROR, System.currentTimeMillis() - startTime);
         } finally {
             // 9. 移除用户信息
             this.removeUserInfo();

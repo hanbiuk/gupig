@@ -60,11 +60,28 @@ public class Result<T> implements Serializable {
         return result;
     }
 
+    public static <T> Result<T> fail(ResultStatusEnum resultStatusEnum, Long cost) {
+        Result<T> result = new Result<>();
+        result.setResult(resultStatusEnum);
+        result.setData(null);
+        result.setCost(cost);
+        return result;
+    }
+
     public static <T> Result<T> fail(ResultStatusEnum resultStatusEnum, String msg) {
         Result<T> result = new Result<>();
         result.setCode(resultStatusEnum.getCode());
         result.setMsg(msg);
         result.setData(null);
+        return result;
+    }
+
+    public static <T> Result<T> fail(ResultStatusEnum resultStatusEnum, String msg, Long cost) {
+        Result<T> result = new Result<>();
+        result.setCode(resultStatusEnum.getCode());
+        result.setMsg(msg);
+        result.setData(null);
+        result.setCost(cost);
         return result;
     }
 
