@@ -3,6 +3,7 @@ package com.gupig.user.app.account.service;
 import com.gupig.user.client.account.api.AccountService;
 import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.client.common.dto.Result;
+import com.gupig.user.client.common.dto.ResultStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -26,7 +27,23 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public Result<String> logIn(AccountLogInCmd cmd) {
+        Result<String> res = Result.success();
+        if (this.paramInvalid(cmd)) {
+            res.setResult(ResultStatusEnum.PARAM_ERROR);
+            return res;
+        }
+
         return Result.success("log in success");
+    }
+
+    /**
+     * 参数不合法
+     *
+     * @param cmd 参数
+     * @return 参数是否不合法
+     */
+    private Boolean paramInvalid(AccountLogInCmd cmd) {
+        return false;
     }
 
     /**

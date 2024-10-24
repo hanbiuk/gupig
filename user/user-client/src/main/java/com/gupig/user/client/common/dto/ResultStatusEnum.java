@@ -25,9 +25,8 @@ public enum ResultStatusEnum {
      * 系统级别错误
      */
     SYSTEM_ERROR("10101", "系统错误"),
-    PARAM_EMPTY("10102", "参数为空"),
-    PARAM_ERROR("10103", "参数错误"),
-    RPC_ERROR("10104", "调用业务方接口异常"),
+    PARAM_ERROR("10102", "参数错误"),
+    RPC_ERROR("10103", "调用业务方接口异常"),
 
     /**
      * 数据级别错误
