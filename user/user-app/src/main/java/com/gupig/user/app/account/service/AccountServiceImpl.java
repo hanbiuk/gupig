@@ -40,9 +40,9 @@ public class AccountServiceImpl implements AccountService {
      * @param cmd 参数
      */
     private void validate(AccountLogInCmd cmd) {
-        Assert.isTrue(StrUtil.isAllNotBlank(cmd.getUsername(), cmd.getEmail()),
+        Assert.isFalse(StrUtil.isAllBlank(cmd.getUsername(), cmd.getEmail()),
                 ResultStatusEnum.PARAM_ERROR.getCode(), "username and email must not both be blank");
-        Assert.isTrue(StrUtil.isAllNotBlank(cmd.getPassword(), cmd.getVerificationCode()),
+        Assert.isFalse(StrUtil.isAllBlank(cmd.getPassword(), cmd.getVerificationCode()),
                 ResultStatusEnum.PARAM_ERROR.getCode(), "password and verificationCode must not both be blank");
     }
 
