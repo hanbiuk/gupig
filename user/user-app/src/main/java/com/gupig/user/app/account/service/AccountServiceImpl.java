@@ -5,7 +5,9 @@ import com.gupig.user.client.account.api.AccountService;
 import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.client.common.dto.Result;
 import com.gupig.user.client.common.dto.ResultStatusEnum;
+import com.gupig.user.domain.account.repo.AccountRepository;
 import com.gupig.user.infra.common.until.Assert;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +22,9 @@ import org.springframework.validation.annotation.Validated;
 @Service
 @Validated
 public class AccountServiceImpl implements AccountService {
+
+    @Resource
+    private AccountRepository accountRepository;
 
     /**
      * 登陆

@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>com.gupig.user</groupId>
-            <artifactId>user-infra</artifactId>
+            <artifactId>user-domain</artifactId>
         </dependency>
     </dependencies>
 

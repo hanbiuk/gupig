@@ -12,4 +12,11 @@
     <groupId>com.gupig.user</groupId>
     <artifactId>user-domain</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.gupig.user</groupId>
+            <artifactId>user-infra</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>
