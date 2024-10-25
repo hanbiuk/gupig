@@ -3,6 +3,7 @@ package com.gupig.user.infra.common.config;
 import com.alibaba.fastjson2.JSON;
 import com.gupig.user.client.common.dto.Result;
 import com.gupig.user.client.common.dto.ResultStatusEnum;
+import com.gupig.user.infra.common.exception.BizException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -70,6 +71,7 @@ public class ServiceAop {
         // 7. 参数校验
         catch (ConstraintViolationException e) {
             if (!Objects.equals(returnType, Result.class)) {
+                log.error("ServiceLogAop getClassAndMethod ConstraintViolationException", e);
                 return null;
             }
 
@@ -79,9 +81,18 @@ public class ServiceAop {
             }
             return Result.fail(ResultStatusEnum.PARAM_ERROR, violationMessageList.toString(), System.currentTimeMillis() - startTime);
         }
-        // 8. 统一异常处理
-        catch (Throwable throwable) {
-            log.error("ServiceLogAop getClassAndMethod exception", throwable);
+        // 8. 业务异常处理
+        catch (BizException e) {
+            if (!Objects.equals(returnType, Result.class)) {
+                log.error("ServiceLogAop getClassAndMethod BizException", e);
+                return null;
+            }
+
+            return Result.fail(e.getErrCode(), e.getMessage(), System.currentTimeMillis() - startTime);
+        }
+        // 9. 统一异常处理
+        catch (Throwable e) {
+            log.error("ServiceLogAop getClassAndMethod exception", e);
 
             if (!Objects.equals(returnType, Result.class)) {
                 return null;
@@ -89,7 +100,7 @@ public class ServiceAop {
 
             return Result.fail(ResultStatusEnum.SYSTEM_ERROR, System.currentTimeMillis() - startTime);
         } finally {
-            // 9. 移除用户信息
+            // 10. 移除用户信息
             this.removeUserInfo();
         }
     }

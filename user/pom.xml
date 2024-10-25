@@ -13,8 +13,8 @@
         <module>user-adapter</module>
         <module>user-client</module>
         <module>user-app</module>
+        <module>user-domain</module>
         <module>user-infra</module>
-<!--        <module>user-domain</module>-->
     </modules>
     <description>user-parent</description>
 
@@ -50,6 +50,11 @@
             <dependency>
                 <groupId>com.gupig.user</groupId>
                 <artifactId>user-app</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gupig.user</groupId>
+                <artifactId>user-domain</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -91,4 +91,13 @@ public class Result<T> implements Serializable {
         return result;
     }
 
+    public static <T> Result<T> fail(String code, String msg, Long cost) {
+        Result<T> result = new Result<>();
+        result.setCode(code);
+        result.setMsg(msg);
+        result.setData(null);
+        result.setCost(cost);
+        return result;
+    }
+
 }

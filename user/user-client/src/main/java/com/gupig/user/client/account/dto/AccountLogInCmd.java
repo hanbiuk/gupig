@@ -49,6 +49,7 @@ public class AccountLogInCmd implements Serializable {
     /**
      * 图形验证码
      */
+    @NotBlank(message = "captcha cannot be blank")
     private String captcha;
 
 }
