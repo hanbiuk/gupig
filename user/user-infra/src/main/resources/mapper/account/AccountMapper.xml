@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gupig.user.infra.account.mapper.AccountMapper">
+
+    <resultMap id="BaseResultMap" type="com.gupig.user.infra.account.dataobject.AccountDO">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="code" column="code" jdbcType="VARCHAR"/>
+        <result property="tenantCode" column="tenant_code" jdbcType="VARCHAR"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="realName" column="real_name" jdbcType="VARCHAR"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="salt" column="salt" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="mobile" column="mobile" jdbcType="VARCHAR"/>
+        <result property="gender" column="gender" jdbcType="TINYINT"/>
+        <result property="birthday" column="birthday" jdbcType="DATE"/>
+        <result property="portrait" column="portrait" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="cstActivate" column="cst_activate" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="creator" column="creator" jdbcType="VARCHAR"/>
+        <result property="cstCreate" column="cst_create" jdbcType="TIMESTAMP"/>
+        <result property="modifier" column="modifier" jdbcType="VARCHAR"/>
+        <result property="cstModify" column="cst_modify" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,code,tenant_code,
+        username,real_name,nickname,
+        password,salt,email,
+        mobile,gender,birthday,
+        portrait,status,cst_activate,
+        is_deleted,creator,cst_create,
+        modifier,cst_modify
+    </sql>
+
+    <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_account
+        where code = #{code}
+    </select>
+
+    <update id="deleteByCode" parameterType="java.lang.String">
+        update user_account
+        set is_deleted = 1
+        where code = #{code}
+    </update>
+    <insert id="insert" parameterType="com.gupig.user.infra.account.dataobject.AccountDO">
+        insert into user_account
+        ( code, tenant_code
+        , username, real_name, nickname
+        , password, salt, email
+        , mobile, gender, birthday
+        , portrait, status, cst_activate
+        , is_deleted, creator, cst_create
+        , modifier, cst_modify)
+        values ( #{code,jdbcType=VARCHAR}, #{tenantCode,jdbcType=VARCHAR}
+               , #{username,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}
+               , #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}
+               , #{mobile,jdbcType=VARCHAR}, #{gender,jdbcType=TINYINT}, #{birthday,jdbcType=DATE}
+               , #{portrait,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{cstActivate,jdbcType=TIMESTAMP}
+               , #{isDeleted,jdbcType=TINYINT}, #{creator,jdbcType=VARCHAR}, #{cstCreate,jdbcType=TIMESTAMP}
+               , #{modifier,jdbcType=VARCHAR}, #{cstModify,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.gupig.user.infra.account.dataobject.AccountDO">
+        insert into user_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null">code,</if>
+            <if test="tenantCode != null">tenant_code,</if>
+            <if test="username != null">username,</if>
+            <if test="realName != null">real_name,</if>
+            <if test="nickname != null">nickname,</if>
+            <if test="password != null">password,</if>
+            <if test="salt != null">salt,</if>
+            <if test="email != null">email,</if>
+            <if test="mobile != null">mobile,</if>
+            <if test="gender != null">gender,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="portrait != null">portrait,</if>
+            <if test="status != null">status,</if>
+            <if test="cstActivate != null">cst_activate,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="creator != null">creator,</if>
+            <if test="cstCreate != null">cst_create,</if>
+            <if test="modifier != null">modifier,</if>
+            <if test="cstModify != null">cst_modify,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null">#{code,jdbcType=VARCHAR},</if>
+            <if test="tenantCode != null">#{tenantCode,jdbcType=VARCHAR},</if>
+            <if test="username != null">#{username,jdbcType=VARCHAR},</if>
+            <if test="realName != null">#{realName,jdbcType=VARCHAR},</if>
+            <if test="nickname != null">#{nickname,jdbcType=VARCHAR},</if>
+            <if test="password != null">#{password,jdbcType=VARCHAR},</if>
+            <if test="salt != null">#{salt,jdbcType=VARCHAR},</if>
+            <if test="email != null">#{email,jdbcType=VARCHAR},</if>
+            <if test="mobile != null">#{mobile,jdbcType=VARCHAR},</if>
+            <if test="gender != null">#{gender,jdbcType=TINYINT},</if>
+            <if test="birthday != null">#{birthday,jdbcType=DATE},</if>
+            <if test="portrait != null">#{portrait,jdbcType=VARCHAR},</if>
+            <if test="status != null">#{status,jdbcType=TINYINT},</if>
+            <if test="cstActivate != null">#{cstActivate,jdbcType=TIMESTAMP},</if>
+            <if test="isDeleted != null">#{isDeleted,jdbcType=TINYINT},</if>
+            <if test="creator != null">#{creator,jdbcType=VARCHAR},</if>
+            <if test="cstCreate != null">#{cstCreate,jdbcType=TIMESTAMP},</if>
+            <if test="modifier != null">#{modifier,jdbcType=VARCHAR},</if>
+            <if test="cstModify != null">#{cstModify,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+    <update id="updateByCodeSelective" parameterType="com.gupig.user.infra.account.dataobject.AccountDO">
+        update user_account
+        <set>
+            <if test="tenantCode != null">
+                tenant_code = #{tenantCode,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null">
+                real_name = #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="nickname != null">
+                nickname = #{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="salt != null">
+                salt = #{salt,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="gender != null">
+                gender = #{gender,jdbcType=TINYINT},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday,jdbcType=DATE},
+            </if>
+            <if test="portrait != null">
+                portrait = #{portrait,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="cstActivate != null">
+                cst_activate = #{cstActivate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="cstCreate != null">
+                cst_create = #{cstCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="cstModify != null">
+                cst_modify = #{cstModify,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where code = #{code}
+    </update>
+    <update id="updateByCode" parameterType="com.gupig.user.infra.account.dataobject.AccountDO">
+        update user_account
+        set tenant_code  = #{tenantCode,jdbcType=VARCHAR},
+            username     = #{username,jdbcType=VARCHAR},
+            real_name    = #{realName,jdbcType=VARCHAR},
+            nickname     = #{nickname,jdbcType=VARCHAR},
+            password     = #{password,jdbcType=VARCHAR},
+            salt         = #{salt,jdbcType=VARCHAR},
+            email        = #{email,jdbcType=VARCHAR},
+            mobile       = #{mobile,jdbcType=VARCHAR},
+            gender       = #{gender,jdbcType=TINYINT},
+            birthday     = #{birthday,jdbcType=DATE},
+            portrait     = #{portrait,jdbcType=VARCHAR},
+            status       = #{status,jdbcType=TINYINT},
+            cst_activate = #{cstActivate,jdbcType=TIMESTAMP},
+            is_deleted   = #{isDeleted,jdbcType=TINYINT},
+            creator      = #{creator,jdbcType=VARCHAR},
+            cst_create   = #{cstCreate,jdbcType=TIMESTAMP},
+            modifier     = #{modifier,jdbcType=VARCHAR},
+            cst_modify   = #{cstModify,jdbcType=TIMESTAMP}
+        where code = #{code}
+    </update>
+</mapper>
