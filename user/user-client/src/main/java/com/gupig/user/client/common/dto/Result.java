@@ -8,8 +8,8 @@ import java.io.Serializable;
  * 统一返回结果
  *
  * @param <T> 泛型
- * @author luojunjiang
- * @since 2023-10-24
+ * @author hanbiuk
+ * @date 2024-10-14
  */
 @Data
 public class Result<T> implements Serializable {
