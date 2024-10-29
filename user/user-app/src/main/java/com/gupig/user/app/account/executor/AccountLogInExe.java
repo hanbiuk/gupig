@@ -52,7 +52,7 @@ public class AccountLogInExe {
                 return Result.fail(ResultStatusEnum.DATA_NOT_EXIST, "user or verify error");
             }
         }
-        // 4.2. 如果是验证码, 检验验证码
+        // 4.2. 如果是验证码, 校验验证码
         else {
             return Result.fail(ResultStatusEnum.FUNCTION_IN_PROGRESS);
         }
