@@ -29,7 +29,7 @@
         <spring-cloud-alibaba.version>2023.0.1.2</spring-cloud-alibaba.version>
         <spring-cloud-bootstrap.version>4.0.0</spring-cloud-bootstrap.version>
         <spring-test.version>3.3.3</spring-test.version>
-        <mysql.version>9.0.0</mysql.version>
+        <mysql.version>9.1.0</mysql.version>
         <mybatis.version>3.0.3</mybatis.version>
         <hutool.version>5.8.32</hutool.version>
         <fastjson2.version>2.0.53</fastjson2.version>
