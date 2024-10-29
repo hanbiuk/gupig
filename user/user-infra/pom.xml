@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>com.gupig.user</groupId>
-            <artifactId>user-client</artifactId>
+            <artifactId>user-domain</artifactId>
         </dependency>
 
         <dependency>

@@ -35,13 +35,17 @@
         select
         <include refid="Base_Column_List"/>
         from user_account_biz
-        where code = #{code}
+        where is_deleted = 0
+          and code = #{code}
     </select>
 
-    <update id="deleteByCode" parameterType="java.lang.String">
+    <update id="deleteByCode" parameterType="com.gupig.user.infra.account.dataobject.AccountBizDO">
         update user_account_biz
-        set is_deleted = 1
-        where code = #{code}
+        set is_deleted = 1,
+            modifier   = #{modifier},
+            cst_modify = #{cstModify}
+        where is_deleted = 0
+          and code = #{code}
     </update>
     <insert id="insert" parameterType="com.gupig.user.infra.account.dataobject.AccountBizDO">
         insert into user_account_biz
@@ -134,7 +138,8 @@
                 cst_modify = #{cstModify,jdbcType=TIMESTAMP},
             </if>
         </set>
-        where code = #{code}
+        where is_deleted = 0
+            and code = #{code}
     </update>
     <update id="updateByCode" parameterType="com.gupig.user.infra.account.dataobject.AccountBizDO">
         update user_account_biz
@@ -151,6 +156,7 @@
             cst_create   = #{cstCreate,jdbcType=TIMESTAMP},
             modifier     = #{modifier,jdbcType=VARCHAR},
             cst_modify   = #{cstModify,jdbcType=TIMESTAMP}
-        where code = #{code}
+        where is_deleted = 0
+          and code = #{code}
     </update>
 </mapper>

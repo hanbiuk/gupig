@@ -1,7 +1,7 @@
 package com.gupig.user.adapter.account.web;
 
 import com.gupig.user.client.account.api.AccountService;
-import com.gupig.user.client.account.dto.AccountLogInCmd;
+import com.gupig.user.client.account.dto.AccountLogInQry;
 import com.gupig.user.client.common.dto.Result;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,12 +25,12 @@ public class AccountController {
     /**
      * 登陆
      *
-     * @param cmd 命令参数
+     * @param qry 查询参数
      * @return 登陆凭证
      */
     @PostMapping("log/in")
-    public Result<String> logIn(@RequestBody AccountLogInCmd cmd) {
-        return accountService.logIn(cmd);
+    public Result<String> logIn(@RequestBody AccountLogInQry qry) {
+        return accountService.logIn(qry);
     }
 
     /**

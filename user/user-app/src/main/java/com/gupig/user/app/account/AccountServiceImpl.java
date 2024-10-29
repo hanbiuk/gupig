@@ -1,12 +1,9 @@
-package com.gupig.user.app.account.service;
+package com.gupig.user.app.account;
 
-import cn.hutool.core.util.StrUtil;
+import com.gupig.user.app.account.executor.AccountLogInExe;
 import com.gupig.user.client.account.api.AccountService;
-import com.gupig.user.client.account.dto.AccountLogInCmd;
+import com.gupig.user.client.account.dto.AccountLogInQry;
 import com.gupig.user.client.common.dto.Result;
-import com.gupig.user.client.common.dto.ResultStatusEnum;
-import com.gupig.user.domain.account.repo.AccountRepository;
-import com.gupig.user.infra.common.until.Assert;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,31 +21,17 @@ import org.springframework.validation.annotation.Validated;
 public class AccountServiceImpl implements AccountService {
 
     @Resource
-    private AccountRepository accountRepository;
+    private AccountLogInExe accountLogInExe;
 
     /**
      * 登陆
      *
-     * @param cmd 命令参数
+     * @param qry 查询参数
      * @return 登陆凭证
      */
     @Override
-    public Result<String> logIn(AccountLogInCmd cmd) {
-        this.validate(cmd);
-
-        return Result.success("log in success");
-    }
-
-    /**
-     * 参数校验
-     *
-     * @param cmd 参数
-     */
-    private void validate(AccountLogInCmd cmd) {
-        Assert.isFalse(StrUtil.isAllBlank(cmd.getUsername(), cmd.getEmail()),
-                ResultStatusEnum.PARAM_ERROR.getCode(), "username and email must not both be blank");
-        Assert.isFalse(StrUtil.isAllBlank(cmd.getPassword(), cmd.getVerificationCode()),
-                ResultStatusEnum.PARAM_ERROR.getCode(), "password and verificationCode must not both be blank");
+    public Result<String> logIn(AccountLogInQry qry) {
+        return accountLogInExe.execute(qry);
     }
 
     /**

@@ -28,27 +28,48 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id
-        ,code,tenant_code,
-        username,real_name,nickname,
-        password,salt,email,
-        mobile,gender,birthday,
-        portrait,status,cst_activate,
-        is_deleted,creator,cst_create,
-        modifier,cst_modify
+        ua.id
+        ,ua.code,ua.tenant_code,
+        ua.username,ua.real_name,ua.nickname,
+        ua.password,ua.salt,ua.email,
+        ua.mobile,ua.gender,ua.birthday,
+        ua.portrait,ua.status,ua.cst_activate,
+        ua.is_deleted,ua.creator,ua.cst_create,
+        ua.modifier,ua.cst_modify
     </sql>
 
     <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from user_account
-        where code = #{code}
+        from user_account ua
+        where ua.is_deleted = 0
+          and ua.code = #{code}
+    </select>
+    <select id="selectByBiz" resultType="com.gupig.user.infra.account.dataobject.AccountWithBizDataResult">
+        select
+        <include refid="Base_Column_List"/>,
+        uab.id uabId,uab.code uabCode,
+        uab.biz_code bizCode,uab.nickname uabNickname,
+        uab.portrait uabPortrait,uab.user_detail uabUserDetail,uab.status uabStatus,
+        uab.cst_activate uabCstActivate,uab.is_deleted uabIsDeleted,uab.creator uabCreator,
+        uab.cst_create uabCstCreate,uab.modifier uabModifier,uab.cst_modify uabCstModify
+        from user_account ua
+        left join user_account_biz uab on ua.code = uab.ua_code
+        where ua.is_deleted = 0
+        and uab.is_deleted = 0
+        and ua.tenant_code = #{tenantCode}
+        and uab.biz_code = #{bizCode}
+        <if test="username != null">and ua.username = #{username}</if>
+        <if test="email != null">and ua.email = #{email}</if>
     </select>
 
-    <update id="deleteByCode" parameterType="java.lang.String">
+    <update id="deleteByCode" parameterType="com.gupig.user.infra.account.dataobject.AccountDO">
         update user_account
-        set is_deleted = 1
-        where code = #{code}
+        set is_deleted = 1,
+            modifier   = #{modifier},
+            cst_modify = #{cstModify}
+        where is_deleted = 0
+          and code = #{code}
     </update>
     <insert id="insert" parameterType="com.gupig.user.infra.account.dataobject.AccountDO">
         insert into user_account
@@ -170,7 +191,8 @@
                 cst_modify = #{cstModify,jdbcType=TIMESTAMP},
             </if>
         </set>
-        where code = #{code}
+        where is_deleted = 0
+            and code = #{code}
     </update>
     <update id="updateByCode" parameterType="com.gupig.user.infra.account.dataobject.AccountDO">
         update user_account
@@ -192,6 +214,7 @@
             cst_create   = #{cstCreate,jdbcType=TIMESTAMP},
             modifier     = #{modifier,jdbcType=VARCHAR},
             cst_modify   = #{cstModify,jdbcType=TIMESTAMP}
-        where code = #{code}
+        where is_deleted = 0
+          and code = #{code}
     </update>
 </mapper>

@@ -16,11 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>com.gupig.user</groupId>
-            <artifactId>user-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gupig.user</groupId>
-            <artifactId>user-domain</artifactId>
+            <artifactId>user-infra</artifactId>
         </dependency>
     </dependencies>
 

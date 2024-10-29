@@ -1,6 +1,8 @@
 package com.gupig.user.infra.account.mapper;
 
+import com.gupig.user.client.account.dto.AccountLogInQry;
 import com.gupig.user.infra.account.dataobject.AccountDO;
+import com.gupig.user.infra.account.dataobject.AccountWithBizDataResult;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -15,10 +17,10 @@ public interface AccountMapper {
     /**
      * 根据主键编码删除
      *
-     * @param code 主键编码
+     * @param record 记录
      * @return 受影响行数
      */
-    Integer deleteByCode(String code);
+    Integer deleteByCode(AccountDO record);
 
     /**
      * 新增记录
@@ -59,5 +61,13 @@ public interface AccountMapper {
      * @return 受影响行数
      */
     Integer updateByCode(AccountDO record);
+
+    /**
+     * 根据业务线获取账号信息
+     *
+     * @param qry 查询参数
+     * @return 账号及业务线结果
+     */
+    AccountWithBizDataResult selectByBiz(AccountLogInQry qry);
 
 }

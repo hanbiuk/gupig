@@ -15,10 +15,10 @@ public interface AccountBizMapper {
     /**
      * 根据主键编码删除
      *
-     * @param code 主键编码
+     * @param record 记录
      * @return 受影响行数
      */
-    Integer deleteByCode(String code);
+    Integer deleteByCode(AccountBizDO record);
 
     /**
      * 新增记录

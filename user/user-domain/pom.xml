@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>com.gupig.user</groupId>
-            <artifactId>user-infra</artifactId>
+            <artifactId>user-client</artifactId>
         </dependency>
     </dependencies>
 
