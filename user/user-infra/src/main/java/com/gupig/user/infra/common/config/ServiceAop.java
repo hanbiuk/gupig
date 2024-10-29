@@ -35,7 +35,7 @@ public class ServiceAop {
      * @param pjp 切点
      * @return 返回结果
      */
-    @Around("execution(* com.gupig.*.app.*.service.*.*(..))")
+    @Around("execution(* com.gupig.*.app..*ServiceImpl.*(..))")
     public Object around(ProceedingJoinPoint pjp) {
         StringBuilder classAndMethod = new StringBuilder();
         long startTime = System.currentTimeMillis();
