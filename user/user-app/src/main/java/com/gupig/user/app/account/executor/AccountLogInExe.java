@@ -1,7 +1,7 @@
 package com.gupig.user.app.account.executor;
 
 import cn.hutool.core.util.StrUtil;
-import com.gupig.user.client.account.dto.AccountLogInQry;
+import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.client.account.enums.AccountStatusEnum;
 import com.gupig.user.client.common.dto.Result;
 import com.gupig.user.client.common.dto.ResultStatusEnum;
@@ -29,15 +29,15 @@ public class AccountLogInExe {
     /**
      * 登陆
      *
-     * @param qry 查询参数
+     * @param cmd 命令参数
      * @return 登陆凭证
      */
-    public Result<String> execute(AccountLogInQry qry) {
+    public Result<String> execute(AccountLogInCmd cmd) {
         // 1. 参数校验
-        this.validate(qry);
+        this.validate(cmd);
 
         // 2. 获取业务线的账号
-        AccountAggBO accountAggBO = accountRepository.selectByBiz(qry);
+        AccountAggBO accountAggBO = accountRepository.selectByBiz(cmd);
 
         // 3. 账号不存在, 直接返回
         if (Objects.isNull(accountAggBO)) {
@@ -46,8 +46,8 @@ public class AccountLogInExe {
 
         // 4. 验证登陆
         // 4.1. 如果是密码登陆, 校验密码
-        if (StrUtil.isNotBlank(qry.getPassword())) {
-            String passwordDigest = Digest.md5WithSalt(qry.getPassword(), accountAggBO.getSalt());
+        if (StrUtil.isNotBlank(cmd.getPassword())) {
+            String passwordDigest = Digest.md5WithSalt(cmd.getPassword(), accountAggBO.getSalt());
             if (!Objects.equals(accountAggBO.getPassword(), passwordDigest)) {
                 return Result.fail(ResultStatusEnum.DATA_NOT_EXIST, "user or verify error");
             }
@@ -83,12 +83,12 @@ public class AccountLogInExe {
     /**
      * 参数校验
      *
-     * @param qry 参数
+     * @param cmd 参数
      */
-    private void validate(AccountLogInQry qry) {
-        Assert.isFalse(StrUtil.isAllBlank(qry.getUsername(), qry.getEmail()),
+    private void validate(AccountLogInCmd cmd) {
+        Assert.isFalse(StrUtil.isAllBlank(cmd.getUsername(), cmd.getEmail()),
                 ResultStatusEnum.PARAM_ERROR.getCode(), "username and email must not both be blank");
-        Assert.isFalse(StrUtil.isAllBlank(qry.getPassword(), qry.getVerificationCode()),
+        Assert.isFalse(StrUtil.isAllBlank(cmd.getPassword(), cmd.getVerificationCode()),
                 ResultStatusEnum.PARAM_ERROR.getCode(), "password and verificationCode must not both be blank");
     }
 

@@ -1,6 +1,6 @@
 package com.gupig.user.client.account.api;
 
-import com.gupig.user.client.account.dto.AccountLogInQry;
+import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.client.common.dto.Result;
 import jakarta.validation.Valid;
 
@@ -15,10 +15,10 @@ public interface AccountService {
     /**
      * 登陆
      *
-     * @param qry 查询参数
+     * @param cmd 命令参数
      * @return 登陆凭证
      */
-    Result<String> logIn(@Valid AccountLogInQry qry);
+    Result<String> logIn(@Valid AccountLogInCmd cmd);
 
     /**
      * 登出

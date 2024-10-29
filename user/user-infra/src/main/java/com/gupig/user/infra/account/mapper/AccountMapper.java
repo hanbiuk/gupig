@@ -1,6 +1,6 @@
 package com.gupig.user.infra.account.mapper;
 
-import com.gupig.user.client.account.dto.AccountLogInQry;
+import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.infra.account.dataobject.AccountDO;
 import com.gupig.user.infra.account.dataobject.AccountWithBizDataResult;
 import org.apache.ibatis.annotations.Mapper;
@@ -65,9 +65,9 @@ public interface AccountMapper {
     /**
      * 根据业务线获取账号信息
      *
-     * @param qry 查询参数
+     * @param cmd 命令参数
      * @return 账号及业务线结果
      */
-    AccountWithBizDataResult selectByBiz(AccountLogInQry qry);
+    AccountWithBizDataResult selectByBiz(AccountLogInCmd cmd);
 
 }

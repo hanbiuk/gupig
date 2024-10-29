@@ -1,7 +1,7 @@
 package com.gupig.user.infra.account.repo;
 
 import cn.hutool.jwt.JWT;
-import com.gupig.user.client.account.dto.AccountLogInQry;
+import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.domain.account.aggregate.AccountAggBO;
 import com.gupig.user.domain.account.repo.AccountRepository;
 import com.gupig.user.infra.account.config.TokenProperties;
@@ -35,12 +35,12 @@ public class AccountRepositoryImpl implements AccountRepository {
     /**
      * 根据业务线获取账号信息
      *
-     * @param qry 查询参数
+     * @param cmd 命令参数
      * @return 账号信息
      */
     @Override
-    public AccountAggBO selectByBiz(AccountLogInQry qry) {
-        AccountWithBizDataResult accountWithBizDataResult = accountMapper.selectByBiz(qry);
+    public AccountAggBO selectByBiz(AccountLogInCmd cmd) {
+        AccountWithBizDataResult accountWithBizDataResult = accountMapper.selectByBiz(cmd);
         return accountConvertor.toAggBo(accountWithBizDataResult);
     }
 

@@ -1,6 +1,6 @@
 package com.gupig.user.domain.account.repo;
 
-import com.gupig.user.client.account.dto.AccountLogInQry;
+import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.domain.account.aggregate.AccountAggBO;
 
 /**
@@ -14,10 +14,10 @@ public interface AccountRepository {
     /**
      * 根据业务线获取账号信息
      *
-     * @param qry 查询参数
+     * @param cmd 命令参数
      * @return 账号信息
      */
-    AccountAggBO selectByBiz(AccountLogInQry qry);
+    AccountAggBO selectByBiz(AccountLogInCmd cmd);
 
     /**
      * 生成token

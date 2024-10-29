@@ -2,7 +2,7 @@ package com.gupig.user.app.account;
 
 import com.gupig.user.app.account.executor.AccountLogInExe;
 import com.gupig.user.client.account.api.AccountService;
-import com.gupig.user.client.account.dto.AccountLogInQry;
+import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.client.common.dto.Result;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -26,12 +26,12 @@ public class AccountServiceImpl implements AccountService {
     /**
      * 登陆
      *
-     * @param qry 查询参数
+     * @param cmd 命令参数
      * @return 登陆凭证
      */
     @Override
-    public Result<String> logIn(AccountLogInQry qry) {
-        return accountLogInExe.execute(qry);
+    public Result<String> logIn(AccountLogInCmd cmd) {
+        return accountLogInExe.execute(cmd);
     }
 
     /**

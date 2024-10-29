@@ -6,13 +6,13 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 账号登陆 查询参数
+ * 账号登陆 命令参数
  *
  * @author hanbiuk
  * @date 2024-10-14
  */
 @Data
-public class AccountLogInQry implements Serializable {
+public class AccountLogInCmd implements Serializable {
 
     /**
      * 租户编码
