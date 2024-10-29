@@ -1,6 +1,7 @@
 package com.gupig.user.start;
 
 import lombok.extern.slf4j.Slf4j;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @Slf4j
 @ComponentScan("com.gupig.user")
+@MapperScan(basePackages = "com.gupig.user.infra.*.mapper")
 @SpringBootApplication
 public class UserApplication {
 
