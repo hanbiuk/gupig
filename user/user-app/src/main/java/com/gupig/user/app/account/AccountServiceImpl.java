@@ -1,8 +1,10 @@
 package com.gupig.user.app.account;
 
 import com.gupig.user.app.account.executor.AccountLogInExe;
+import com.gupig.user.app.account.executor.AccountLogOutExe;
 import com.gupig.user.client.account.api.AccountService;
 import com.gupig.user.client.account.dto.AccountLogInCmd;
+import com.gupig.user.client.account.dto.AccountLogOutCmd;
 import com.gupig.user.client.common.dto.Result;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Resource
     private AccountLogInExe accountLogInExe;
+    @Resource
+    private AccountLogOutExe accountLogOutExe;
 
     /**
      * 登陆
@@ -37,11 +41,12 @@ public class AccountServiceImpl implements AccountService {
     /**
      * 登出
      *
+     * @param cmd 命令参数
      * @return 是否成功
      */
     @Override
-    public Result<Boolean> logOut() {
-        return Result.success(true);
+    public Result<Boolean> logOut(AccountLogOutCmd cmd) {
+        return accountLogOutExe.execute(cmd);
     }
 
     /**

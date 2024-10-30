@@ -11,6 +11,7 @@ import com.gupig.user.infra.account.mapper.AccountMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     @Override
     public AccountAggBO selectByBiz(AccountLogInCmd cmd) {
         AccountWithBizDataResult accountWithBizDataResult = accountMapper.selectByBiz(cmd);
-        return accountConvertor.toAggBo(accountWithBizDataResult);
+        return accountConvertor.toAggBO(accountWithBizDataResult);
     }
 
     /**
@@ -61,6 +62,7 @@ public class AccountRepositoryImpl implements AccountRepository {
         return JWT.create()
                 .addPayloads(payloads)
                 .setKey(tokenProperties.getKey().getBytes())
+                .setExpiresAt(new Date(System.currentTimeMillis() + tokenProperties.getExpireTime()))
                 .sign();
     }
 

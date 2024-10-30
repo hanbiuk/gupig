@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gupig.user.infra.account.mapper.AccountLogoutMapper">
+
+    <resultMap id="BaseResultMap" type="com.gupig.user.infra.account.dataobject.AccountLogoutDO">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="code" column="code" jdbcType="VARCHAR"/>
+        <result property="tenantCode" column="tenant_code" jdbcType="VARCHAR"/>
+        <result property="uaCode" column="ua_code" jdbcType="VARCHAR"/>
+        <result property="bizCode" column="biz_code" jdbcType="VARCHAR"/>
+        <result property="token" column="token" jdbcType="VARCHAR"/>
+        <result property="cstExpire" column="cst_expire" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="creator" column="creator" jdbcType="VARCHAR"/>
+        <result property="cstCreate" column="cst_create" jdbcType="TIMESTAMP"/>
+        <result property="modifier" column="modifier" jdbcType="VARCHAR"/>
+        <result property="cstModify" column="cst_modify" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,code,tenant_code,
+        ua_code,biz_code,token,
+        cst_expire,is_deleted,creator,
+        cst_create,modifier,cst_modify
+    </sql>
+
+    <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_account_logout
+        where is_deleted = 0
+        and code = #{code}
+    </select>
+
+    <update id="deleteByCode" parameterType="com.gupig.user.infra.account.dataobject.AccountLogoutDO">
+        update user_account_logout
+        set is_deleted = 1,
+            modifier   = #{modifier},
+            cst_modify = #{cstModify}
+        where is_deleted = 0
+          and code = #{code}
+    </update>
+
+    <insert id="insert" parameterType="com.gupig.user.infra.account.dataobject.AccountLogoutDO">
+        insert into user_account_logout
+        ( code, tenant_code
+        , ua_code, biz_code, token
+        , cst_expire, is_deleted, creator
+        , cst_create, modifier, cst_modify)
+        values ( #{code,jdbcType=VARCHAR}, #{tenantCode,jdbcType=VARCHAR}
+               , #{uaCode,jdbcType=VARCHAR}, #{bizCode,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR}
+               , #{cstExpire,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=TINYINT}, #{creator,jdbcType=VARCHAR}
+               , #{cstCreate,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, #{cstModify,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.gupig.user.infra.account.dataobject.AccountLogoutDO">
+        insert into user_account_logout
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null">code,</if>
+            <if test="tenantCode != null">tenant_code,</if>
+            <if test="uaCode != null">ua_code,</if>
+            <if test="bizCode != null">biz_code,</if>
+            <if test="token != null">token,</if>
+            <if test="cstExpire != null">cst_expire,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="creator != null">creator,</if>
+            <if test="cstCreate != null">cst_create,</if>
+            <if test="modifier != null">modifier,</if>
+            <if test="cstModify != null">cst_modify,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null">#{code,jdbcType=VARCHAR},</if>
+            <if test="tenantCode != null">#{tenantCode,jdbcType=VARCHAR},</if>
+            <if test="uaCode != null">#{uaCode,jdbcType=VARCHAR},</if>
+            <if test="bizCode != null">#{bizCode,jdbcType=VARCHAR},</if>
+            <if test="token != null">#{token,jdbcType=VARCHAR},</if>
+            <if test="cstExpire != null">#{cstExpire,jdbcType=TIMESTAMP},</if>
+            <if test="isDeleted != null">#{isDeleted,jdbcType=TINYINT},</if>
+            <if test="creator != null">#{creator,jdbcType=VARCHAR},</if>
+            <if test="cstCreate != null">#{cstCreate,jdbcType=TIMESTAMP},</if>
+            <if test="modifier != null">#{modifier,jdbcType=VARCHAR},</if>
+            <if test="cstModify != null">#{cstModify,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+    <update id="updateByCodeSelective" parameterType="com.gupig.user.infra.account.dataobject.AccountLogoutDO">
+        update user_account_logout
+        <set>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="tenantCode != null">
+                tenant_code = #{tenantCode,jdbcType=VARCHAR},
+            </if>
+            <if test="uaCode != null">
+                ua_code = #{uaCode,jdbcType=VARCHAR},
+            </if>
+            <if test="bizCode != null">
+                biz_code = #{bizCode,jdbcType=VARCHAR},
+            </if>
+            <if test="token != null">
+                token = #{token,jdbcType=VARCHAR},
+            </if>
+            <if test="cstExpire != null">
+                cst_expire = #{cstExpire,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="cstCreate != null">
+                cst_create = #{cstCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="cstModify != null">
+                cst_modify = #{cstModify,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where is_deleted = 0
+        and code = #{code}
+    </update>
+    <update id="updateByCode" parameterType="com.gupig.user.infra.account.dataobject.AccountLogoutDO">
+        update user_account_logout
+        set tenant_code = #{tenantCode,jdbcType=VARCHAR},
+            ua_code     = #{uaCode,jdbcType=VARCHAR},
+            biz_code    = #{bizCode,jdbcType=VARCHAR},
+            token       = #{token,jdbcType=VARCHAR},
+            cst_expire  = #{cstExpire,jdbcType=TIMESTAMP},
+            is_deleted  = #{isDeleted,jdbcType=TINYINT},
+            creator     = #{creator,jdbcType=VARCHAR},
+            cst_create  = #{cstCreate,jdbcType=TIMESTAMP},
+            modifier    = #{modifier,jdbcType=VARCHAR},
+            cst_modify  = #{cstModify,jdbcType=TIMESTAMP}
+        where is_deleted = 0
+          and code = #{code}
+    </update>
+</mapper>

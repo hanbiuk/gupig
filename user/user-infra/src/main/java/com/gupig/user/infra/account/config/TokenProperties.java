@@ -20,4 +20,9 @@ public class TokenProperties {
      */
     private String key = "foanjgnapeiojgeignjeui";
 
+    /**
+     * 过期时间, 默认7天
+     */
+    private Long expireTime = 604800000L;
+
 }

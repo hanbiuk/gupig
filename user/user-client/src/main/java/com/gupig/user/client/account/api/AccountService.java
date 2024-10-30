@@ -1,6 +1,7 @@
 package com.gupig.user.client.account.api;
 
 import com.gupig.user.client.account.dto.AccountLogInCmd;
+import com.gupig.user.client.account.dto.AccountLogOutCmd;
 import com.gupig.user.client.common.dto.Result;
 import jakarta.validation.Valid;
 
@@ -23,9 +24,10 @@ public interface AccountService {
     /**
      * 登出
      *
+     * @param cmd 命令参数
      * @return 是否成功
      */
-    Result<Boolean> logOut();
+    Result<Boolean> logOut(@Valid AccountLogOutCmd cmd);
 
     /**
      * 注册

@@ -28,7 +28,7 @@ public class AccountConvertor {
      * @param dataResult 数据结果
      * @return AccountAggBO
      */
-    public AccountAggBO toAggBo(AccountWithBizDataResult dataResult) {
+    public AccountAggBO toAggBO(AccountWithBizDataResult dataResult) {
         if (Objects.isNull(dataResult)) {
             return null;
         }

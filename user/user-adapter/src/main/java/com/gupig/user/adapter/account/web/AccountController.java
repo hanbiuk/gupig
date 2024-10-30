@@ -2,6 +2,7 @@ package com.gupig.user.adapter.account.web;
 
 import com.gupig.user.client.account.api.AccountService;
 import com.gupig.user.client.account.dto.AccountLogInCmd;
+import com.gupig.user.client.account.dto.AccountLogOutCmd;
 import com.gupig.user.client.common.dto.Result;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,8 +40,8 @@ public class AccountController {
      * @return 是否成功
      */
     @PostMapping("log/out")
-    public Result<Boolean> logOut() {
-        return accountService.logOut();
+    public Result<Boolean> logOut(@RequestBody AccountLogOutCmd cmd) {
+        return accountService.logOut(cmd);
     }
 
     /**
