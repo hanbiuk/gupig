@@ -128,24 +128,38 @@ public class ServiceAop {
      * @return 登陆凭证
      */
     private String verifyToken() {
+        // 1. 获取请求参数
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        String token = null;
-        if (Objects.nonNull(attributes)) {
-            HttpServletRequest request = attributes.getRequest();
-            token = request.getHeader(tokenProperties.getHeaderName());
-
-            if (StrUtil.isNotBlank(token)) {
-                JWT jwt = JWT.of(token);
-                if (!jwt.verify()) {
-                    throw new BizException(ResultStatusEnum.UNAUTHORIZED.getCode(), ResultStatusEnum.UNAUTHORIZED.getMsg());
-                }
-
-                LocalDateTime cstExpire = jwt.getPayloads().get("cstExpire", LocalDateTime.class);
-                if (cstExpire.isBefore(LocalDateTime.now())) {
-                    throw new BizException(ResultStatusEnum.AUTHORIZATION_EXPIRE.getCode(), ResultStatusEnum.AUTHORIZATION_EXPIRE.getMsg());
-                }
-            }
+        if (Objects.isNull(attributes)) {
+            return null;
         }
+
+        // 2. 获取请求头中的登陆凭证
+        HttpServletRequest request = attributes.getRequest();
+        String token = request.getHeader(tokenProperties.getHeaderName());
+        if (StrUtil.isBlank(token)) {
+            return null;
+        }
+
+        try {
+            // 3. 将token转化为jwt
+            JWT jwt = JWT.of(token);
+
+            // 4. 验证jwt
+            if (!jwt.verify()) {
+                throw new BizException(ResultStatusEnum.UNAUTHORIZED.getCode(), ResultStatusEnum.UNAUTHORIZED.getMsg());
+            }
+
+            // 5. 验证过期时间
+            LocalDateTime cstExpire = jwt.getPayloads().get("cstExpire", LocalDateTime.class);
+            if (cstExpire.isBefore(LocalDateTime.now())) {
+                throw new BizException(ResultStatusEnum.AUTHORIZATION_EXPIRE.getCode(), ResultStatusEnum.AUTHORIZATION_EXPIRE.getMsg());
+            }
+        } catch (Exception e) {
+            throw new BizException(ResultStatusEnum.UNAUTHORIZED.getCode(), ResultStatusEnum.UNAUTHORIZED.getMsg());
+        }
+
+        // 6. 返回登陆凭证
         return token;
     }
 
