@@ -30,13 +30,17 @@ public class AccountLogoutConvertor {
             return null;
         }
 
-        AccountLogoutBO accountLogoutBO = new AccountLogoutBO();
-        BeanUtils.copyProperties(cmd, accountLogoutBO);
-
         LocalDateTime now = LocalDateTime.now();
-        accountLogoutBO.setCreator(accountLogoutBO.getUaCode());
+
+        AccountLogoutBO accountLogoutBO = new AccountLogoutBO();
+        accountLogoutBO.setTenantCode(cmd.getUserContext().getOptTenantCode());
+        accountLogoutBO.setUaCode(cmd.getUserContext().getOptUaCode());
+        accountLogoutBO.setBizCode(cmd.getUserContext().getOptBizCode());
+        accountLogoutBO.setToken(cmd.getUserContext().getToken());
+        accountLogoutBO.setCstExpire(cmd.getUserContext().getCstExpire());
+        accountLogoutBO.setCreator(cmd.getUserContext().getOptUaCode());
         accountLogoutBO.setCstCreate(now);
-        accountLogoutBO.setModifier(accountLogoutBO.getUaCode());
+        accountLogoutBO.setModifier(cmd.getUserContext().getOptUaCode());
         accountLogoutBO.setCstModify(now);
 
         return accountLogoutBO;

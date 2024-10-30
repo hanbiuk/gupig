@@ -7,6 +7,7 @@ import com.gupig.user.client.common.dto.Result;
 import com.gupig.user.client.common.dto.ResultStatusEnum;
 import com.gupig.user.domain.account.aggregate.AccountAggBO;
 import com.gupig.user.domain.account.repo.AccountRepository;
+import com.gupig.user.infra.account.convertor.AccountConvertor;
 import com.gupig.user.infra.common.until.Assert;
 import com.gupig.user.infra.common.until.Digest;
 import jakarta.annotation.Resource;
@@ -25,6 +26,9 @@ public class AccountLogInExe {
 
     @Resource
     private AccountRepository accountRepository;
+
+    @Resource
+    private AccountConvertor accountConvertor;
 
     /**
      * 登陆
@@ -75,7 +79,7 @@ public class AccountLogInExe {
         }
 
         // 8. 登陆成功, 返回token
-        String token = accountRepository.generateToken(accountAggBO);
+        String token = accountConvertor.buildToken(accountAggBO);
 
         return Result.success(token);
     }

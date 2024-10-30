@@ -28,29 +28,29 @@ public class UserContextDTO {
     /**
      * 租户编码
      */
-    @NotBlank(message = "tenantCode cannot be blank")
-    private String tenantCode;
+    @NotBlank(message = "optTenantCode cannot be blank")
+    private String optTenantCode;
 
     /**
      * 业务线
      */
-    @NotBlank(message = "bizCode cannot be blank")
-    private String bizCode;
+    @NotBlank(message = "optBizCode cannot be blank")
+    private String optBizCode;
 
     /**
      * 用户账号编码
      */
-    @NotBlank(message = "uaCode cannot be blank")
-    private String uaCode;
+    @NotBlank(message = "optUaCode cannot be blank")
+    private String optUaCode;
 
     /**
      * 用户名
      */
-    private String username;
+    private String optUsername;
 
     /**
      * 用户名
      */
-    private String nickname;
+    private String optNickname;
 
 }

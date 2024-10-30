@@ -19,12 +19,4 @@ public interface AccountRepository {
      */
     AccountAggBO selectByBiz(AccountLogInCmd cmd);
 
-    /**
-     * 生成token
-     *
-     * @param accountAggBO 账号信息
-     * @return token
-     */
-    String generateToken(AccountAggBO accountAggBO);
-
 }

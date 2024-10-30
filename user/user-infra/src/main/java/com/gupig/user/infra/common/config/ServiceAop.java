@@ -1,9 +1,17 @@
 package com.gupig.user.infra.common.config;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.jwt.JWT;
 import com.alibaba.fastjson2.JSON;
+import com.gupig.user.client.common.dto.ContextDTO;
 import com.gupig.user.client.common.dto.Result;
 import com.gupig.user.client.common.dto.ResultStatusEnum;
+import com.gupig.user.client.common.dto.UserContextDTO;
+import com.gupig.user.infra.account.config.TokenProperties;
+import com.gupig.user.infra.common.convertor.ContextConvertor;
 import com.gupig.user.infra.common.exception.BizException;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +20,11 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,13 +40,19 @@ import java.util.Objects;
 @Component
 public class ServiceAop {
 
+    @Resource
+    private TokenProperties tokenProperties;
+
+    @Resource
+    private ContextConvertor contextConvertor;
+
     /**
      * 环绕方法
      *
      * @param pjp 切点
      * @return 返回结果
      */
-    @Around("execution(* com.gupig.*.app..*ServiceImpl.*(..))")
+    @Around("execution(* com.gupig.user.app..*ServiceImpl.*(..))")
     public Object around(ProceedingJoinPoint pjp) {
         StringBuilder classAndMethod = new StringBuilder();
         long startTime = System.currentTimeMillis();
@@ -51,27 +68,30 @@ public class ServiceAop {
             // 2. 打印参数
             this.logParam(pjp, classAndMethod);
 
-            // 3. 用户信息设置
-            Long userId = this.setUserInfo(pjp);
+            // 3. 获取并验证登陆凭证
+            String token = this.verifyToken();
 
-            // 4. 执行方法
+            // 4. 上下文信息设置
+            String userCode = this.setContext(pjp, token);
+
+            // 5. 执行方法
             Object result = pjp.proceed();
 
-            // 5. 设置响应时间
+            // 6. 设置响应时间
             long cost = System.currentTimeMillis() - startTime;
             if (Objects.equals(returnType, Result.class)) {
                 ((Result<?>) result).setCost(cost);
             }
 
-            // 6. 打印响应
-            this.logResult(result, classAndMethod, cost, userId);
+            // 7. 打印响应
+            this.logResult(result, classAndMethod, cost, userCode);
 
             return result;
         }
-        // 7. 参数校验
+        // 8. 参数校验
         catch (ConstraintViolationException e) {
             if (!Objects.equals(returnType, Result.class)) {
-                log.error("ServiceLogAop getClassAndMethod ConstraintViolationException", e);
+                log.error("ServiceAop around ConstraintViolationException", e);
                 return null;
             }
 
@@ -81,28 +101,52 @@ public class ServiceAop {
             }
             return Result.fail(ResultStatusEnum.PARAM_ERROR, violationMessageList.toString(), System.currentTimeMillis() - startTime);
         }
-        // 8. 业务异常处理
+        // 9. 业务异常处理
         catch (BizException e) {
             if (!Objects.equals(returnType, Result.class)) {
-                log.error("ServiceLogAop getClassAndMethod BizException", e);
+                log.error("ServiceAop around BizException", e);
                 return null;
             }
 
             return Result.fail(e.getErrCode(), e.getMessage(), System.currentTimeMillis() - startTime);
         }
-        // 9. 统一异常处理
+        // 10. 其他异常处理
         catch (Throwable e) {
-            log.error("ServiceLogAop getClassAndMethod exception", e);
+            log.error("ServiceAop around exception", e);
 
             if (!Objects.equals(returnType, Result.class)) {
                 return null;
             }
 
             return Result.fail(ResultStatusEnum.SYSTEM_ERROR, System.currentTimeMillis() - startTime);
-        } finally {
-            // 10. 移除用户信息
-            this.removeUserInfo();
         }
+    }
+
+    /**
+     * 获取并验证请求头中的登陆凭证
+     *
+     * @return 登陆凭证
+     */
+    private String verifyToken() {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String token = null;
+        if (Objects.nonNull(attributes)) {
+            HttpServletRequest request = attributes.getRequest();
+            token = request.getHeader(tokenProperties.getHeaderName());
+
+            if (StrUtil.isNotBlank(token)) {
+                JWT jwt = JWT.of(token);
+                if (!jwt.verify()) {
+                    throw new BizException(ResultStatusEnum.UNAUTHORIZED.getCode(), ResultStatusEnum.UNAUTHORIZED.getMsg());
+                }
+
+                LocalDateTime cstExpire = jwt.getPayloads().get("cstExpire", LocalDateTime.class);
+                if (cstExpire.isBefore(LocalDateTime.now())) {
+                    throw new BizException(ResultStatusEnum.AUTHORIZATION_EXPIRE.getCode(), ResultStatusEnum.AUTHORIZATION_EXPIRE.getMsg());
+                }
+            }
+        }
+        return token;
     }
 
     /**
@@ -116,54 +160,32 @@ public class ServiceAop {
             String params = JSON.toJSONString(pjp.getArgs());
             log.info("{} params: {}", classAndMethod, params);
         } catch (Exception e) {
-            log.error("ServiceLogAop logParams exception", e);
+            log.error("ServiceAop logParams exception", e);
         }
     }
 
     /**
      * 设置用户信息
      *
-     * @param pjp 连接点
-     * @return 用户编号
+     * @param pjp   连接点
+     * @param token 登陆凭证
+     * @return 用户编码
      */
-    private Long setUserInfo(ProceedingJoinPoint pjp) {
-        Long userId = null;
-//        try {
-//            UserInfoDTO userInfoDTO = new UserInfoDTO();
-//            for (Object arg : pjp.getArgs()) {
-//                if (arg instanceof AdminServiceParam) {
-//                    // 1. 设置用户信息参数
-//                    if (!ObjectUtils.isEmpty(((AdminServiceParam) arg).getSessionTenantId())) {
-//                        Long sessionTenantId = ((AdminServiceParam) arg).getSessionTenantId();
-//                        if (Objects.nonNull(sessionTenantId)) {
-//                            ((AdminServiceParam) arg).setAdminTenantId(sessionTenantId);
-//                        }
-//                    }
-//                    if (!ObjectUtils.isEmpty(((AdminServiceParam) arg).getAdminUserId())) {
-//                        userId = ((AdminServiceParam) arg).getAdminUserId();
-//                    }
-//
-//                    // 2. 设置用户信息
-//                    userInfoDTO.setTenantId(((AdminServiceParam) arg).getAdminTenantId());
-//                    userInfoDTO.setUserId(userId);
-//                    userInfoDTO.setUserName(((AdminServiceParam) arg).getAdminUserName());
-//                }
-//            }
-//            // 3. 设置用户信息上下文
-//            if (Objects.isNull(BaseContext.getUserInfo())) {
-//                BaseContext.setUserInfo(userInfoDTO);
-//            }
-//        } catch (Exception e) {
-//            log.error("ServiceLogAop setUserInfo exception", e);
-//        }
-        return userId;
-    }
+    private String setContext(ProceedingJoinPoint pjp, String token) {
+        String userCode = null;
+        try {
+            for (Object arg : pjp.getArgs()) {
+                if (arg instanceof ContextDTO) {
+                    UserContextDTO userContext = contextConvertor.buildUserContext(token);
+                    ((ContextDTO) arg).setUserContext(userContext);
 
-    /**
-     * 移除用户信息
-     */
-    private void removeUserInfo() {
-//        BaseContext.removeUserInfo();
+                    userCode = userContext.getOptUaCode();
+                }
+            }
+        } catch (Exception e) {
+            log.error("ServiceAop setContext exception", e);
+        }
+        return userCode;
     }
 
     /**
@@ -172,14 +194,14 @@ public class ServiceAop {
      * @param result         响应
      * @param classAndMethod 类#方法
      * @param cost           响应时间
-     * @param userId         用户编号
+     * @param userCode       用户编码
      */
-    private void logResult(Object result, StringBuilder classAndMethod, Long cost, Long userId) {
+    private void logResult(Object result, StringBuilder classAndMethod, Long cost, String userCode) {
         try {
             String resultStr = JSON.toJSONString(result);
-            log.info("{} result: {}, 耗时: {}ms, userId:{}", classAndMethod, resultStr, cost, userId);
+            log.info("{} result: {}, 耗时: {}ms, userCode: {}", classAndMethod, resultStr, cost, userCode);
         } catch (Exception e) {
-            log.error("ServiceLogAop logResult exception", e);
+            log.error("ServiceAop logResult exception", e);
         }
     }
 

@@ -23,6 +23,11 @@ public class TokenProperties {
     /**
      * 过期时间, 默认7天
      */
-    private Long expireTime = 604800000L;
+    private Long expireDays = 7L;
+
+    /**
+     * 请求头名称
+     */
+    private String headerName = "Authorization";
 
 }
