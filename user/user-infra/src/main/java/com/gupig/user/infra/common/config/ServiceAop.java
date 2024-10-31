@@ -156,6 +156,7 @@ public class ServiceAop {
                 throw new BizException(ResultStatusEnum.AUTHORIZATION_EXPIRE.getCode(), ResultStatusEnum.AUTHORIZATION_EXPIRE.getMsg());
             }
         } catch (Exception e) {
+            log.error("ServiceAop verifyToken exception", e);
             throw new BizException(ResultStatusEnum.UNAUTHORIZED.getCode(), ResultStatusEnum.UNAUTHORIZED.getMsg());
         }
 
