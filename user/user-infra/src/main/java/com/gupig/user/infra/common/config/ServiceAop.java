@@ -202,14 +202,15 @@ public class ServiceAop {
             return null;
         }
 
-        try {
-            for (Object arg : pjp.getArgs()) {
-                if (arg instanceof ContextDTO) {
-                    ((ContextDTO) arg).setUserContext(userContext);
-                }
+        Object[] args = pjp.getArgs();
+        if (Objects.isNull(args)) {
+            return null;
+        }
+
+        for (Object arg : args) {
+            if (arg instanceof ContextDTO) {
+                ((ContextDTO) arg).setUserContext(userContext);
             }
-        } catch (Exception e) {
-            log.error("ServiceAop setContext exception", e);
         }
 
         return userContext.getOptUaCode();
