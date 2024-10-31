@@ -30,4 +30,9 @@ public class TokenProperties {
      */
     private String headerName = "Authorization";
 
+    /**
+     * 校验登出
+     */
+    private Boolean checkLogout = false;
+
 }

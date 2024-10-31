@@ -1,5 +1,6 @@
 package com.gupig.user.domain.account.repo;
 
+import com.gupig.user.client.common.dto.UserContextDTO;
 import com.gupig.user.domain.account.entity.AccountLogoutBO;
 
 /**
@@ -17,5 +18,13 @@ public interface AccountLogoutRepository {
      * @return 受影响行数
      */
     Integer add(AccountLogoutBO accountLogoutBO);
+
+    /**
+     * 是否已登出
+     *
+     * @param userContext 用户上下文
+     * @return true: 已登出, false: 未登出
+     */
+    Boolean hasLogout(UserContextDTO userContext);
 
 }

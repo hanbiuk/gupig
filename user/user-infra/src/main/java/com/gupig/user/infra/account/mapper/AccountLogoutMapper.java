@@ -1,5 +1,6 @@
 package com.gupig.user.infra.account.mapper;
 
+import com.gupig.user.client.common.dto.UserContextDTO;
 import com.gupig.user.infra.account.dataobject.AccountLogoutDO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -59,5 +60,13 @@ public interface AccountLogoutMapper {
      * @return 受影响行数
      */
     Integer updateByCode(AccountLogoutDO record);
+
+    /**
+     * 是否已登出
+     *
+     * @param userContext 用户上下文
+     * @return 记录数量大于0为已登出
+     */
+    Integer hasLogout(UserContextDTO userContext);
 
 }

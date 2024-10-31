@@ -34,6 +34,16 @@
         where is_deleted = 0
         and code = #{code}
     </select>
+    <select id="hasLogout" resultType="java.lang.Integer">
+        select count(1)
+        from user_account_logout
+        where is_deleted = 0
+          and tenant_code = #{optTenantCode}
+          and ua_code = #{optUaCode}
+          and biz_code = #{optBizCode}
+          and token = #{token}
+            limit 1
+    </select>
 
     <update id="deleteByCode" parameterType="com.gupig.user.infra.account.dataobject.AccountLogoutDO">
         update user_account_logout

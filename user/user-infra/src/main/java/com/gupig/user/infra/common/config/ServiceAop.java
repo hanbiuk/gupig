@@ -7,6 +7,7 @@ import com.gupig.user.client.common.dto.ContextDTO;
 import com.gupig.user.client.common.dto.Result;
 import com.gupig.user.client.common.dto.ResultStatusEnum;
 import com.gupig.user.client.common.dto.UserContextDTO;
+import com.gupig.user.domain.account.repo.AccountLogoutRepository;
 import com.gupig.user.infra.account.config.TokenProperties;
 import com.gupig.user.infra.common.convertor.ContextConvertor;
 import com.gupig.user.infra.common.exception.BizException;
@@ -41,6 +42,9 @@ import java.util.Objects;
 public class ServiceAop {
 
     @Resource
+    private AccountLogoutRepository accountLogoutRepository;
+
+    @Resource
     private TokenProperties tokenProperties;
 
     @Resource
@@ -69,10 +73,10 @@ public class ServiceAop {
             this.logParam(pjp, classAndMethod);
 
             // 3. 获取并验证登陆凭证
-            String token = this.verifyToken();
+            UserContextDTO userContext = this.verifyToken();
 
-            // 4. 上下文信息设置
-            String userCode = this.setContext(pjp, token);
+            // 4. 上下文信息设置进参数
+            String userCode = this.setContext(pjp, userContext);
 
             // 5. 执行方法
             Object result = pjp.proceed();
@@ -127,7 +131,7 @@ public class ServiceAop {
      *
      * @return 登陆凭证
      */
-    private String verifyToken() {
+    private UserContextDTO verifyToken() {
         // 1. 获取请求参数
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (Objects.isNull(attributes)) {
@@ -155,13 +159,20 @@ public class ServiceAop {
             if (cstExpire.isBefore(LocalDateTime.now())) {
                 throw new BizException(ResultStatusEnum.AUTHORIZATION_EXPIRE.getCode(), ResultStatusEnum.AUTHORIZATION_EXPIRE.getMsg());
             }
+
+            // 6. 校验登出
+            UserContextDTO userContext = contextConvertor.buildUserContext(token);
+            if (tokenProperties.getCheckLogout()
+                    && accountLogoutRepository.hasLogout(userContext)) {
+                throw new BizException(ResultStatusEnum.AUTHORIZATION_LOGOUT.getCode(), ResultStatusEnum.AUTHORIZATION_LOGOUT.getMsg());
+            }
+
+            // 7. 返回用户上下文
+            return userContext;
         } catch (Exception e) {
             log.error("ServiceAop verifyToken exception", e);
             throw new BizException(ResultStatusEnum.UNAUTHORIZED.getCode(), ResultStatusEnum.UNAUTHORIZED.getMsg());
         }
-
-        // 6. 返回登陆凭证
-        return token;
     }
 
     /**
@@ -182,25 +193,26 @@ public class ServiceAop {
     /**
      * 设置用户信息
      *
-     * @param pjp   连接点
-     * @param token 登陆凭证
+     * @param pjp         连接点
+     * @param userContext 用户上下文
      * @return 用户编码
      */
-    private String setContext(ProceedingJoinPoint pjp, String token) {
-        String userCode = null;
+    private String setContext(ProceedingJoinPoint pjp, UserContextDTO userContext) {
+        if (Objects.isNull(userContext)) {
+            return null;
+        }
+
         try {
             for (Object arg : pjp.getArgs()) {
                 if (arg instanceof ContextDTO) {
-                    UserContextDTO userContext = contextConvertor.buildUserContext(token);
                     ((ContextDTO) arg).setUserContext(userContext);
-
-                    userCode = userContext.getOptUaCode();
                 }
             }
         } catch (Exception e) {
             log.error("ServiceAop setContext exception", e);
         }
-        return userCode;
+
+        return userContext.getOptUaCode();
     }
 
     /**

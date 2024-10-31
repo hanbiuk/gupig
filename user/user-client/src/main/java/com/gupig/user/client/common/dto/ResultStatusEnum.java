@@ -19,8 +19,8 @@ public enum ResultStatusEnum {
     SUCCESS("200", "成功"),
     UNAUTHORIZED("401", "未授权"),
     AUTHORIZATION_EXPIRE("402", "授权已过期"),
+    AUTHORIZATION_LOGOUT("403", "授权已登出"),
     ERROR("500", "服务器异常"),
-
 
     /**
      * 系统级别错误

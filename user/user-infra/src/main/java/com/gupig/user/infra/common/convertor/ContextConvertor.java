@@ -22,22 +22,26 @@ public class ContextConvertor {
      * @return 用户上下文
      */
     public UserContextDTO buildUserContext(String token) {
-        JWT jwt = JWT.of(token);
-        if (!jwt.verify()) {
+        try {
+            JWT jwt = JWT.of(token);
+            if (!jwt.verify()) {
+                return null;
+            }
+
+            UserContextDTO userContextDTO = new UserContextDTO();
+            userContextDTO.setToken(token);
+
+            userContextDTO.setCstExpire(jwt.getPayloads().get("cstExpire", LocalDateTime.class));
+            userContextDTO.setOptTenantCode(jwt.getPayloads().getStr("tenantCode"));
+            userContextDTO.setOptBizCode(jwt.getPayloads().getStr("bizCode"));
+            userContextDTO.setOptUaCode(jwt.getPayloads().getStr("uaCode"));
+            userContextDTO.setOptUsername(jwt.getPayloads().getStr("username"));
+            userContextDTO.setOptNickname(jwt.getPayloads().getStr("nickname"));
+
+            return userContextDTO;
+        } catch (Exception e) {
             return null;
         }
-
-        UserContextDTO userContextDTO = new UserContextDTO();
-        userContextDTO.setToken(token);
-
-        userContextDTO.setCstExpire(jwt.getPayloads().get("cstExpire", LocalDateTime.class));
-        userContextDTO.setOptTenantCode(jwt.getPayloads().getStr("tenantCode"));
-        userContextDTO.setOptBizCode(jwt.getPayloads().getStr("bizCode"));
-        userContextDTO.setOptUaCode(jwt.getPayloads().getStr("uaCode"));
-        userContextDTO.setOptUsername(jwt.getPayloads().getStr("username"));
-        userContextDTO.setOptNickname(jwt.getPayloads().getStr("nickname"));
-
-        return userContextDTO;
     }
 
 }
