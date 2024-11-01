@@ -13,7 +13,6 @@ import com.gupig.user.infra.account.convertor.AccountBizConvertor;
 import com.gupig.user.infra.account.convertor.AccountConvertor;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -39,7 +38,7 @@ public class AccountSignUpExe {
 
     @Resource
     private AccountBizConvertor accountBizConvertor;
-    @Autowired
+    @Resource
     private AccountConvertor accountConvertor;
 
     /**
@@ -141,27 +140,34 @@ public class AccountSignUpExe {
         }
 
         Boolean executed = transactionTemplate.execute(status -> {
-            // 2. 新增账号记录
-            AccountBO accountAddBO = accountConvertor.buildAddBO(cmd);
-            Integer addAccount = accountRepository.add(accountAddBO);
-            if (addAccount <= 0) {
-                log.error("AccountSignUpExe dealNotExistEmail addAccount exception, {}", addAccount);
+            try {
+                // 2. 新增账号记录
+                AccountBO accountAddBO = accountConvertor.buildAddBO(cmd);
+                Integer addAccount = accountRepository.add(accountAddBO);
+                if (addAccount <= 0) {
+                    status.setRollbackOnly();
+                    log.error("AccountSignUpExe dealNotExistEmail addAccount exception, {}", addAccount);
+                    return false;
+                }
+
+                // 3. 新增账号业务线记录
+                AccountBizBO accountBizAddBO = accountBizConvertor.buildAddBO(accountAddBO, cmd);
+                Integer addAccountBiz = accountBizRepository.add(accountBizAddBO);
+                if (addAccountBiz <= 0) {
+                    status.setRollbackOnly();
+                    log.error("AccountSignUpExe dealNotExistEmail addAccountBiz exception, {}", addAccountBiz);
+                    return false;
+                }
+
+                return true;
+            } catch (Exception e) {
+                status.setRollbackOnly();
+                log.error("AccountSignUpExe dealNotExistEmail execute exception", e);
                 return false;
             }
-
-            // 3. 新增账号业务线记录
-            AccountBizBO accountBizAddBO = accountBizConvertor.buildAddBO(accountAddBO, cmd);
-            Integer addAccountBiz = accountBizRepository.add(accountBizAddBO);
-            if (addAccountBiz <= 0) {
-                log.error("AccountSignUpExe dealNotExistEmail addAccountBiz exception, {}", addAccountBiz);
-                return false;
-            }
-
-            return true;
         });
 
         if (Boolean.TRUE.equals(executed)) {
-            log.error("AccountSignUpExe dealNotExistEmail addData exception");
             return Result.fail(ResultStatusEnum.SAVE_EXCEPTION);
         } else {
             return Result.success(true);
