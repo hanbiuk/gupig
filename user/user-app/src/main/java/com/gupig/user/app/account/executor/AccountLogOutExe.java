@@ -1,6 +1,5 @@
 package com.gupig.user.app.account.executor;
 
-import cn.hutool.jwt.JWT;
 import com.gupig.user.client.account.dto.AccountLogOutCmd;
 import com.gupig.user.client.common.dto.Result;
 import com.gupig.user.client.common.dto.ResultStatusEnum;
@@ -37,16 +36,12 @@ public class AccountLogOutExe {
         // 1. 参数校验
         this.validate(cmd);
 
-        // 2. 验证token
-        JWT jwt = JWT.of(cmd.getUserContext().getToken());
-        if (jwt.verify()) {
-            // 3. 新增登出记录
-            AccountLogoutBO accountLogoutBO = accountLogoutConvertor.buildAddBO(cmd);
-            Integer addAccountLogout = accountLogoutRepository.add(accountLogoutBO);
-            if (addAccountLogout <= 0) {
-                log.error("AccountLogOutExe execute addAccountLogout exception, {}", addAccountLogout);
-                return Result.fail(ResultStatusEnum.SAVE_EXCEPTION);
-            }
+        // 2. 新增登出记录
+        AccountLogoutBO accountLogoutBO = accountLogoutConvertor.buildAddBO(cmd);
+        Integer addAccountLogout = accountLogoutRepository.add(accountLogoutBO);
+        if (addAccountLogout <= 0) {
+            log.error("AccountLogOutExe execute addAccountLogout exception, {}", addAccountLogout);
+            return Result.fail(ResultStatusEnum.SAVE_EXCEPTION);
         }
 
         return Result.success(true);

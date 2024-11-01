@@ -24,9 +24,6 @@ public class ContextConvertor {
     public UserContextDTO buildUserContext(String token) {
         try {
             JWT jwt = JWT.of(token);
-            if (!jwt.verify()) {
-                return null;
-            }
 
             UserContextDTO userContextDTO = new UserContextDTO();
             userContextDTO.setToken(token);

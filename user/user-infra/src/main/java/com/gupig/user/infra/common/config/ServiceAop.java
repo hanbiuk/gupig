@@ -145,34 +145,35 @@ public class ServiceAop {
             return null;
         }
 
+        JWT jwt;
         try {
             // 3. 将token转化为jwt
-            JWT jwt = JWT.of(token);
-
-            // 4. 验证jwt
-            if (!jwt.verify()) {
-                throw new BizException(ResultStatusEnum.UNAUTHORIZED.getCode(), ResultStatusEnum.UNAUTHORIZED.getMsg());
-            }
-
-            // 5. 验证过期时间
-            LocalDateTime cstExpire = jwt.getPayloads().get("cstExpire", LocalDateTime.class);
-            if (cstExpire.isBefore(LocalDateTime.now())) {
-                throw new BizException(ResultStatusEnum.AUTHORIZATION_EXPIRE.getCode(), ResultStatusEnum.AUTHORIZATION_EXPIRE.getMsg());
-            }
-
-            // 6. 校验登出
-            UserContextDTO userContext = contextConvertor.buildUserContext(token);
-            if (tokenProperties.getCheckLogout()
-                    && accountLogoutRepository.hasLogout(userContext)) {
-                throw new BizException(ResultStatusEnum.AUTHORIZATION_LOGOUT.getCode(), ResultStatusEnum.AUTHORIZATION_LOGOUT.getMsg());
-            }
-
-            // 7. 返回用户上下文
-            return userContext;
+            jwt = JWT.of(token).setKey(tokenProperties.getKey().getBytes());
         } catch (Exception e) {
             log.error("ServiceAop verifyToken exception", e);
             throw new BizException(ResultStatusEnum.UNAUTHORIZED.getCode(), ResultStatusEnum.UNAUTHORIZED.getMsg());
         }
+
+        // 4. 验证jwt
+        if (!jwt.verify()) {
+            throw new BizException(ResultStatusEnum.UNAUTHORIZED.getCode(), ResultStatusEnum.UNAUTHORIZED.getMsg());
+        }
+
+        // 5. 验证过期时间
+        LocalDateTime cstExpire = jwt.getPayloads().get("cstExpire", LocalDateTime.class);
+        if (cstExpire.isBefore(LocalDateTime.now())) {
+            throw new BizException(ResultStatusEnum.AUTHORIZATION_EXPIRE.getCode(), ResultStatusEnum.AUTHORIZATION_EXPIRE.getMsg());
+        }
+
+        // 6. 校验登出
+        UserContextDTO userContext = contextConvertor.buildUserContext(token);
+        if (tokenProperties.getCheckLogout()
+                && accountLogoutRepository.hasLogout(userContext)) {
+            throw new BizException(ResultStatusEnum.AUTHORIZATION_LOGOUT.getCode(), ResultStatusEnum.AUTHORIZATION_LOGOUT.getMsg());
+        }
+
+        // 7. 返回用户上下文
+        return userContext;
     }
 
     /**
