@@ -82,7 +82,7 @@ public class AccountBizConvertor {
         accountBizBO.setCode(SnowflakeCodeWorker.getInstance().nextId("UAB"));
 
         accountBizBO.setBizCode(cmd.getBizCode());
-
+        accountBizBO.setUaCode(accountBO.getCode());
         accountBizBO.setStatus(AccountStatusEnum.ENABLE.getCode());
 
         LocalDateTime now = LocalDateTime.now();

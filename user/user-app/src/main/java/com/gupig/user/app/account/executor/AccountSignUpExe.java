@@ -167,7 +167,7 @@ public class AccountSignUpExe {
             }
         });
 
-        if (Boolean.TRUE.equals(executed)) {
+        if (!Boolean.TRUE.equals(executed)) {
             return Result.fail(ResultStatusEnum.SAVE_EXCEPTION);
         } else {
             return Result.success(true);
