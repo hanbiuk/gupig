@@ -44,6 +44,10 @@ public class AccountLogOutExe {
             return Result.fail(ResultStatusEnum.SAVE_EXCEPTION);
         }
 
+        // 3. 删除过期的登出记录
+        Integer deleteExpired = accountLogoutRepository.deleteExpired();
+        log.info("AccountLogOutExe execute deleteExpired count: {}", deleteExpired);
+
         return Result.success(true);
     }
 

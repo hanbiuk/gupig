@@ -53,6 +53,12 @@
           and code = #{code}
     </update>
 
+    <delete id="deleteExpired">
+        delete
+        from user_account_logout
+        where cst_expire &lt; now()
+    </delete>
+
     <insert id="insert" parameterType="com.gupig.user.infra.account.dataobject.AccountLogoutDO">
         insert into user_account_logout
         ( code, tenant_code

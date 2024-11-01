@@ -64,6 +64,13 @@ public interface AccountLogoutMapper {
     Integer updateByCode(AccountLogoutDO record);
 
     /**
+     * 删除过期记录
+     *
+     * @return 受影响行数
+     */
+    Integer deleteExpired();
+
+    /**
      * 查询记录列表
      *
      * @param dataQry 数据查询参数

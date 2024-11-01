@@ -40,6 +40,16 @@ public class AccountLogoutRepositoryImpl implements AccountLogoutRepository {
     }
 
     /**
+     * 删除过期记录
+     *
+     * @return 受影响行数
+     */
+    @Override
+    public Integer deleteExpired() {
+        return accountLogoutMapper.deleteExpired();
+    }
+
+    /**
      * 是否已登出
      *
      * @param userContext 用户上下文

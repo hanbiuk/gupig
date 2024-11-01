@@ -20,6 +20,13 @@ public interface AccountLogoutRepository {
     Integer add(AccountLogoutBO accountLogoutBO);
 
     /**
+     * 删除过期记录
+     *
+     * @return 受影响行数
+     */
+    Integer deleteExpired();
+
+    /**
      * 是否已登出
      *
      * @param userContext 用户上下文
