@@ -1,4 +1,4 @@
-package com.gupig.user.infra.account.config;
+package com.gupig.user.infra.common.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

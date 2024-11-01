@@ -8,7 +8,6 @@ import com.gupig.user.client.common.dto.Result;
 import com.gupig.user.client.common.dto.ResultStatusEnum;
 import com.gupig.user.client.common.dto.UserContextDTO;
 import com.gupig.user.domain.account.repo.AccountLogoutRepository;
-import com.gupig.user.infra.account.config.TokenProperties;
 import com.gupig.user.infra.common.convertor.ContextConvertor;
 import com.gupig.user.infra.common.exception.BizException;
 import jakarta.annotation.Resource;
