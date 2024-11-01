@@ -6,9 +6,11 @@ import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.client.account.enums.AccountStatusEnum;
 import com.gupig.user.client.common.dto.Result;
 import com.gupig.user.client.common.dto.ResultStatusEnum;
+import com.gupig.user.client.common.dto.UserContextDTO;
 import com.gupig.user.domain.account.aggregate.AccountAggBO;
 import com.gupig.user.domain.account.repo.AccountRepository;
 import com.gupig.user.infra.account.convertor.AccountConvertor;
+import com.gupig.user.infra.common.convertor.ContextConvertor;
 import com.gupig.user.infra.common.until.Assert;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
@@ -29,6 +31,8 @@ public class AccountLogInExe {
 
     @Resource
     private AccountConvertor accountConvertor;
+    @Resource
+    private ContextConvertor contextConvertor;
 
     /**
      * 登陆
@@ -74,7 +78,8 @@ public class AccountLogInExe {
         }
 
         // 7. 登陆成功, 返回token
-        String token = accountConvertor.buildToken(accountAggBO);
+        UserContextDTO userContext = accountConvertor.buildUserContext(accountAggBO);
+        String token = contextConvertor.buildToken(userContext);
 
         return Result.success(token);
     }

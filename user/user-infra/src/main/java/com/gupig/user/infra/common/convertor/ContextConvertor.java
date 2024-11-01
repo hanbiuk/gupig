@@ -2,9 +2,13 @@ package com.gupig.user.infra.common.convertor;
 
 import cn.hutool.jwt.JWT;
 import com.gupig.user.client.common.dto.UserContextDTO;
+import com.gupig.user.infra.common.config.TokenProperties;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 上下文对象 转换器
@@ -14,6 +18,29 @@ import java.time.LocalDateTime;
  */
 @Component
 public class ContextConvertor {
+
+    @Resource
+    private TokenProperties tokenProperties;
+
+    /**
+     * 生成token
+     *
+     * @param userContext 用户上下文信息
+     * @return token
+     */
+    public String buildToken(UserContextDTO userContext) {
+        Map<String, Object> payloads = new HashMap<>(8);
+        payloads.put("tenantCode", userContext.getOptTenantCode());
+        payloads.put("bizCode", userContext.getOptBizCode());
+        payloads.put("uaCode", userContext.getOptUaCode());
+        payloads.put("username", userContext.getOptUsername());
+        payloads.put("nickname", userContext.getOptNickname());
+        payloads.put("cstExpire", LocalDateTime.now().plusDays(tokenProperties.getExpireDays()));
+        return JWT.create()
+                .addPayloads(payloads)
+                .setKey(tokenProperties.getKey().getBytes())
+                .sign();
+    }
 
     /**
      * 构建用户上下文

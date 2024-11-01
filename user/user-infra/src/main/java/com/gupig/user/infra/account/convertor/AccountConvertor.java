@@ -2,17 +2,16 @@ package com.gupig.user.infra.account.convertor;
 
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.digest.DigestUtil;
-import cn.hutool.jwt.JWT;
 import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.client.account.dto.AccountSignUpCmd;
 import com.gupig.user.client.account.enums.AccountStatusEnum;
+import com.gupig.user.client.common.dto.UserContextDTO;
 import com.gupig.user.domain.account.aggregate.AccountAggBO;
 import com.gupig.user.domain.account.entity.AccountBO;
 import com.gupig.user.domain.account.entity.AccountBizBO;
 import com.gupig.user.infra.account.dataobject.AccountDO;
 import com.gupig.user.infra.account.dataobject.AccountWithBizDataRes;
 import com.gupig.user.infra.account.dataquery.AccountDataQry;
-import com.gupig.user.infra.common.config.TokenProperties;
 import com.gupig.user.infra.common.until.SnowflakeCodeWorker;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
@@ -20,8 +19,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -35,29 +32,6 @@ public class AccountConvertor {
 
     @Resource
     private AccountBizConvertor accountBizConvertor;
-
-    @Resource
-    private TokenProperties tokenProperties;
-
-    /**
-     * 生成token
-     *
-     * @param accountAggBO 账号信息
-     * @return token
-     */
-    public String buildToken(AccountAggBO accountAggBO) {
-        Map<String, Object> payloads = new HashMap<>(8);
-        payloads.put("tenantCode", accountAggBO.getTenantCode());
-        payloads.put("bizCode", accountAggBO.getAccountBizList().get(0).getBizCode());
-        payloads.put("uaCode", accountAggBO.getCode());
-        payloads.put("username", accountAggBO.getUsername());
-        payloads.put("nickname", accountAggBO.getAccountBizList().get(0).getNickname());
-        payloads.put("cstExpire", LocalDateTime.now().plusDays(tokenProperties.getExpireDays()));
-        return JWT.create()
-                .addPayloads(payloads)
-                .setKey(tokenProperties.getKey().getBytes())
-                .sign();
-    }
 
     /**
      * 转换为 AccountAggBO
@@ -77,6 +51,22 @@ public class AccountConvertor {
         accountAggBO.setAccountBizList(Collections.singletonList(accountBizBO));
 
         return accountAggBO;
+    }
+
+    /**
+     * 构建 UserContextDTO
+     *
+     * @param accountAggBO 聚合业务对象
+     * @return UserContextDTO
+     */
+    public UserContextDTO buildUserContext(AccountAggBO accountAggBO) {
+        UserContextDTO userContextDTO = new UserContextDTO();
+        userContextDTO.setOptTenantCode(accountAggBO.getTenantCode());
+        userContextDTO.setOptBizCode(accountAggBO.getAccountBizList().get(0).getBizCode());
+        userContextDTO.setOptUaCode(accountAggBO.getCode());
+        userContextDTO.setOptUsername(accountAggBO.getUsername());
+        userContextDTO.setOptNickname(accountAggBO.getAccountBizList().get(0).getNickname());
+        return userContextDTO;
     }
 
     /**
@@ -103,6 +93,22 @@ public class AccountConvertor {
      * @return AccountDataQry
      */
     public AccountDataQry toDataQry(AccountLogInCmd cmd) {
+        if (Objects.isNull(cmd)) {
+            return null;
+        }
+
+        AccountDataQry dataQry = new AccountDataQry();
+        BeanUtils.copyProperties(cmd, dataQry);
+        return dataQry;
+    }
+
+    /**
+     * 转换为 AccountDataQry
+     *
+     * @param cmd 命令参数
+     * @return AccountDataQry
+     */
+    public AccountDataQry toDataQry(AccountSignUpCmd cmd) {
         if (Objects.isNull(cmd)) {
             return null;
         }

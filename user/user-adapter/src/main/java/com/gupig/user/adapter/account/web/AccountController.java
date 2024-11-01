@@ -3,6 +3,7 @@ package com.gupig.user.adapter.account.web;
 import com.gupig.user.client.account.api.AccountService;
 import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.client.account.dto.AccountLogOutCmd;
+import com.gupig.user.client.account.dto.AccountSignInCmd;
 import com.gupig.user.client.account.dto.AccountSignUpCmd;
 import com.gupig.user.client.common.dto.Result;
 import jakarta.annotation.Resource;
@@ -60,11 +61,12 @@ public class AccountController {
     /**
      * 注册并登陆
      *
-     * @return 是否成功
+     * @param cmd 命令参数
+     * @return 登陆凭证
      */
     @PostMapping("sign/in")
-    public Result<Boolean> signIn() {
-        return accountService.signIn();
+    public Result<String> signIn(@RequestBody AccountSignInCmd cmd) {
+        return accountService.signIn(cmd);
     }
 
     /**

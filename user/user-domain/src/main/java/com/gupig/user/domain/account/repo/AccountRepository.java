@@ -22,6 +22,14 @@ public interface AccountRepository {
     AccountAggBO selectWithBiz(AccountLogInCmd cmd);
 
     /**
+     * 获取含当前业务线的账号信息
+     *
+     * @param cmd 命令参数
+     * @return 账号信息
+     */
+    AccountAggBO selectWithBiz(AccountSignUpCmd cmd);
+
+    /**
      * 根据邮箱获取账号信息
      *
      * @param cmd 命令参数

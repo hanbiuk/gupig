@@ -1,16 +1,20 @@
 package com.gupig.user.app.account.executor;
 
 import cn.hutool.crypto.digest.DigestUtil;
+import com.gupig.user.client.account.dto.AccountSignInCmd;
 import com.gupig.user.client.account.dto.AccountSignUpCmd;
 import com.gupig.user.client.account.enums.AccountStatusEnum;
 import com.gupig.user.client.common.dto.Result;
 import com.gupig.user.client.common.dto.ResultStatusEnum;
+import com.gupig.user.client.common.dto.UserContextDTO;
+import com.gupig.user.domain.account.aggregate.AccountAggBO;
 import com.gupig.user.domain.account.entity.AccountBO;
 import com.gupig.user.domain.account.entity.AccountBizBO;
 import com.gupig.user.domain.account.repo.AccountBizRepository;
 import com.gupig.user.domain.account.repo.AccountRepository;
 import com.gupig.user.infra.account.convertor.AccountBizConvertor;
 import com.gupig.user.infra.account.convertor.AccountConvertor;
+import com.gupig.user.infra.common.convertor.ContextConvertor;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -40,6 +44,8 @@ public class AccountSignUpExe {
     private AccountBizConvertor accountBizConvertor;
     @Resource
     private AccountConvertor accountConvertor;
+    @Resource
+    private ContextConvertor contextConvertor;
 
     /**
      * 注册
@@ -63,6 +69,27 @@ public class AccountSignUpExe {
         else {
             return this.dealNotExistEmail(cmd);
         }
+    }
+
+    /**
+     * 注册并登陆
+     *
+     * @param cmd 命令参数
+     * @return 是否成功
+     */
+    public Result<String> executeAndIn(AccountSignInCmd cmd) {
+        // 1. 注册
+        Result<Boolean> signUpRes = this.execute(cmd);
+        if (Result.isFail(signUpRes)) {
+            return Result.fail(signUpRes.getCode(), signUpRes.getMsg());
+        }
+
+        // 2. 生成登陆凭证
+        AccountAggBO accountAggBO = accountRepository.selectWithBiz(cmd);
+        UserContextDTO userContext = accountConvertor.buildUserContext(accountAggBO);
+        String token = contextConvertor.buildToken(userContext);
+
+        return Result.success(token);
     }
 
     /**

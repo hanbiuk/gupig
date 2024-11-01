@@ -3,6 +3,7 @@ package com.gupig.user.client.common.dto;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * 统一返回结果
@@ -91,6 +92,14 @@ public class Result<T> implements Serializable {
         return result;
     }
 
+    public static <T> Result<T> fail(String code, String msg) {
+        Result<T> result = new Result<>();
+        result.setCode(code);
+        result.setMsg(msg);
+        result.setData(null);
+        return result;
+    }
+
     public static <T> Result<T> fail(String code, String msg, Long cost) {
         Result<T> result = new Result<>();
         result.setCode(code);
@@ -98,6 +107,14 @@ public class Result<T> implements Serializable {
         result.setData(null);
         result.setCost(cost);
         return result;
+    }
+
+    public static <T> Boolean isFail(Result<T> result) {
+        return Objects.isNull(result) || !Objects.equals(ResultStatusEnum.SUCCESS.getCode(), result.getCode());
+    }
+
+    public static <T> Boolean isSuccess(Result<T> result) {
+        return Objects.nonNull(result) && Objects.equals(ResultStatusEnum.SUCCESS.getCode(), result.getCode());
     }
 
 }
