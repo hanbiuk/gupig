@@ -10,6 +10,8 @@ import com.gupig.user.infra.account.mapper.AccountLogoutMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * 账号登出 资源库实现类
  *
@@ -46,8 +48,8 @@ public class AccountLogoutRepositoryImpl implements AccountLogoutRepository {
     @Override
     public Boolean hasLogout(UserContextDTO userContext) {
         AccountLogoutDataQry dataQry = accountLogoutConvertor.toDataQry(userContext);
-        Integer hasLogout = accountLogoutMapper.hasLogout(dataQry);
-        return hasLogout > 0;
+        List<AccountLogoutDO> accountLogoutDOList = accountLogoutMapper.selectList(dataQry);
+        return accountLogoutDOList.stream().map(AccountLogoutDO::getToken).anyMatch(userContext.getToken()::equals);
     }
 
 }

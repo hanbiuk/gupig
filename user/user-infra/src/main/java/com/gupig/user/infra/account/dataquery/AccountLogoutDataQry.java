@@ -34,11 +34,6 @@ public class AccountLogoutDataQry {
     private String uaCode;
 
     /**
-     * 登陆凭证
-     */
-    private String token;
-
-    /**
      * 过期时间
      */
     private LocalDateTime cstExpire;

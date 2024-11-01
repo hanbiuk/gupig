@@ -60,7 +60,7 @@ CREATE TABLE `user_account_logout`
     `tenant_code` varchar(32)  NOT NULL DEFAULT '' COMMENT '租户编码',
     `ua_code`     varchar(32)  NOT NULL DEFAULT '' COMMENT '用户账号编码',
     `biz_code`    varchar(32)  NOT NULL DEFAULT '' COMMENT '业务线',
-    `token`       varchar(256) NOT NULL DEFAULT '' COMMENT '登陆凭证',
+    `token`       varchar(512) NOT NULL DEFAULT '' COMMENT '登陆凭证',
     `cst_expire`  datetime     NOT NULL DEFAULT '2000-01-01 00:00:01' COMMENT '过期时间',
     `is_deleted`  tinyint(4)   NOT NULL DEFAULT '0' COMMENT '是否删除: 0-否, 1-是',
     `creator`     varchar(32)  NOT NULL DEFAULT '' COMMENT '创建人',

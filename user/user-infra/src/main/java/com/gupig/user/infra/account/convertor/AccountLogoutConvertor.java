@@ -83,7 +83,6 @@ public class AccountLogoutConvertor {
         accountLogoutDataQry.setTenantCode(userContext.getOptTenantCode());
         accountLogoutDataQry.setBizCode(userContext.getOptBizCode());
         accountLogoutDataQry.setUaCode(userContext.getOptUaCode());
-        accountLogoutDataQry.setToken(userContext.getToken());
 
         return accountLogoutDataQry;
     }

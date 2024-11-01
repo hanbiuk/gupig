@@ -4,6 +4,8 @@ import com.gupig.user.infra.account.dataobject.AccountLogoutDO;
 import com.gupig.user.infra.account.dataquery.AccountLogoutDataQry;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 用户账号登出表 数据操作
  *
@@ -62,11 +64,11 @@ public interface AccountLogoutMapper {
     Integer updateByCode(AccountLogoutDO record);
 
     /**
-     * 是否已登出
+     * 查询记录列表
      *
      * @param dataQry 数据查询参数
-     * @return 记录数量大于0为已登出
+     * @return 记录列表
      */
-    Integer hasLogout(AccountLogoutDataQry dataQry);
+    List<AccountLogoutDO> selectList(AccountLogoutDataQry dataQry);
 
 }
