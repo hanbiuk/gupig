@@ -80,14 +80,9 @@ public class AccountDO {
     private String portrait;
 
     /**
-     * 状态: 0-待激活, 1-启用, 2-禁用, 3-销号
+     * 状态: 1-启用, 2-禁用, 3-销号
      */
     private Integer status;
-
-    /**
-     * 激活时间
-     */
-    private LocalDateTime cstActivate;
 
     /**
      * 是否删除: 0-否, 1-是

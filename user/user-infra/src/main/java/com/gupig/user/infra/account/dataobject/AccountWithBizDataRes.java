@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class AccountWithBizDataResult extends AccountDO {
+public class AccountWithBizDataRes extends AccountDO {
 
     /**
      * 主键编号
@@ -49,11 +49,6 @@ public class AccountWithBizDataResult extends AccountDO {
      * 状态: 1-启用, 2-禁用, 3-销号
      */
     private Integer uabStatus;
-
-    /**
-     * 激活时间
-     */
-    private LocalDateTime uabCstActivate;
 
     /**
      * 是否删除: 0-否, 1-是

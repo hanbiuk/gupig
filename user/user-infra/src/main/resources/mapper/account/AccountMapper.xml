@@ -19,7 +19,6 @@
         <result property="birthday" column="birthday" jdbcType="DATE"/>
         <result property="portrait" column="portrait" jdbcType="VARCHAR"/>
         <result property="status" column="status" jdbcType="TINYINT"/>
-        <result property="cstActivate" column="cst_activate" jdbcType="TIMESTAMP"/>
         <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
         <result property="creator" column="creator" jdbcType="VARCHAR"/>
         <result property="cstCreate" column="cst_create" jdbcType="TIMESTAMP"/>
@@ -33,7 +32,7 @@
         ua.username,ua.real_name,ua.nickname,
         ua.password,ua.salt,ua.email,
         ua.mobile,ua.gender,ua.birthday,
-        ua.portrait,ua.status,ua.cst_activate,
+        ua.portrait,ua.status,
         ua.is_deleted,ua.creator,ua.cst_create,
         ua.modifier,ua.cst_modify
     </sql>
@@ -45,13 +44,13 @@
         where ua.is_deleted = 0
           and ua.code = #{code}
     </select>
-    <select id="selectByBiz" resultType="com.gupig.user.infra.account.dataobject.AccountWithBizDataResult">
+    <select id="selectWithBiz" resultType="com.gupig.user.infra.account.dataobject.AccountWithBizDataRes">
         select
         <include refid="Base_Column_List"/>,
         uab.id uabId,uab.code uabCode,
         uab.biz_code bizCode,uab.nickname uabNickname,
         uab.portrait uabPortrait,uab.user_detail uabUserDetail,uab.status uabStatus,
-        uab.cst_activate uabCstActivate,uab.is_deleted uabIsDeleted,uab.creator uabCreator,
+        uab.is_deleted uabIsDeleted,uab.creator uabCreator,
         uab.cst_create uabCstCreate,uab.modifier uabModifier,uab.cst_modify uabCstModify
         from user_account ua
         left join user_account_biz uab on ua.code = uab.ua_code
@@ -59,6 +58,15 @@
         and uab.is_deleted = 0
         and ua.tenant_code = #{tenantCode}
         and uab.biz_code = #{bizCode}
+        <if test="username != null">and ua.username = #{username}</if>
+        <if test="email != null">and ua.email = #{email}</if>
+    </select>
+    <select id="select" resultType="com.gupig.user.infra.account.dataobject.AccountDO">
+        select
+        <include refid="Base_Column_List"/>
+        from user_account ua
+        where ua.is_deleted = 0
+        and ua.tenant_code = #{tenantCode}
         <if test="username != null">and ua.username = #{username}</if>
         <if test="email != null">and ua.email = #{email}</if>
     </select>
@@ -77,14 +85,14 @@
         , username, real_name, nickname
         , password, salt, email
         , mobile, gender, birthday
-        , portrait, status, cst_activate
+        , portrait, status
         , is_deleted, creator, cst_create
         , modifier, cst_modify)
         values ( #{code,jdbcType=VARCHAR}, #{tenantCode,jdbcType=VARCHAR}
                , #{username,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}
                , #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}
                , #{mobile,jdbcType=VARCHAR}, #{gender,jdbcType=TINYINT}, #{birthday,jdbcType=DATE}
-               , #{portrait,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{cstActivate,jdbcType=TIMESTAMP}
+               , #{portrait,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}
                , #{isDeleted,jdbcType=TINYINT}, #{creator,jdbcType=VARCHAR}, #{cstCreate,jdbcType=TIMESTAMP}
                , #{modifier,jdbcType=VARCHAR}, #{cstModify,jdbcType=TIMESTAMP})
     </insert>
@@ -104,7 +112,6 @@
             <if test="birthday != null">birthday,</if>
             <if test="portrait != null">portrait,</if>
             <if test="status != null">status,</if>
-            <if test="cstActivate != null">cst_activate,</if>
             <if test="isDeleted != null">is_deleted,</if>
             <if test="creator != null">creator,</if>
             <if test="cstCreate != null">cst_create,</if>
@@ -125,7 +132,6 @@
             <if test="birthday != null">#{birthday,jdbcType=DATE},</if>
             <if test="portrait != null">#{portrait,jdbcType=VARCHAR},</if>
             <if test="status != null">#{status,jdbcType=TINYINT},</if>
-            <if test="cstActivate != null">#{cstActivate,jdbcType=TIMESTAMP},</if>
             <if test="isDeleted != null">#{isDeleted,jdbcType=TINYINT},</if>
             <if test="creator != null">#{creator,jdbcType=VARCHAR},</if>
             <if test="cstCreate != null">#{cstCreate,jdbcType=TIMESTAMP},</if>
@@ -172,9 +178,6 @@
             <if test="status != null">
                 status = #{status,jdbcType=TINYINT},
             </if>
-            <if test="cstActivate != null">
-                cst_activate = #{cstActivate,jdbcType=TIMESTAMP},
-            </if>
             <if test="isDeleted != null">
                 is_deleted = #{isDeleted,jdbcType=TINYINT},
             </if>
@@ -208,7 +211,6 @@
             birthday     = #{birthday,jdbcType=DATE},
             portrait     = #{portrait,jdbcType=VARCHAR},
             status       = #{status,jdbcType=TINYINT},
-            cst_activate = #{cstActivate,jdbcType=TIMESTAMP},
             is_deleted   = #{isDeleted,jdbcType=TINYINT},
             creator      = #{creator,jdbcType=VARCHAR},
             cst_create   = #{cstCreate,jdbcType=TIMESTAMP},

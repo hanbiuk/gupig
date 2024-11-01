@@ -1,7 +1,9 @@
 package com.gupig.user.domain.account.repo;
 
 import com.gupig.user.client.account.dto.AccountLogInCmd;
+import com.gupig.user.client.account.dto.AccountSignUpCmd;
 import com.gupig.user.domain.account.aggregate.AccountAggBO;
+import com.gupig.user.domain.account.entity.AccountBO;
 
 /**
  * 账号 资源库类
@@ -12,11 +14,19 @@ import com.gupig.user.domain.account.aggregate.AccountAggBO;
 public interface AccountRepository {
 
     /**
-     * 根据业务线获取账号信息
+     * 获取含当前业务线的账号信息
      *
      * @param cmd 命令参数
      * @return 账号信息
      */
-    AccountAggBO selectByBiz(AccountLogInCmd cmd);
+    AccountAggBO selectWithBiz(AccountLogInCmd cmd);
+
+    /**
+     * 根据邮箱获取账号信息
+     *
+     * @param cmd 命令参数
+     * @return 账号信息
+     */
+    AccountBO selectByEmail(AccountSignUpCmd cmd);
 
 }

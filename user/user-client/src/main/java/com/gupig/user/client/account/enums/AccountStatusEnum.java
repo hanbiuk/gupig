@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
- * 账号状态: 0-待激活, 1-启用, 2-禁用, 3-销号
+ * 账号状态: 1-启用, 2-禁用, 3-销号
  *
  * @author hanbiuk
  * @date 2024-10-29
@@ -17,9 +17,8 @@ import java.util.stream.Stream;
 public enum AccountStatusEnum {
 
     /**
-     * 账号状态: 0-待激活, 1-启用, 2-禁用, 3-销号
+     * 账号状态: 1-启用, 2-禁用, 3-销号
      */
-    INACTIVE(0, "待激活"),
     ENABLE(1, "启用"),
     DISABLE(2, "禁用"),
     SIGN_DOWN(3, "销号"),

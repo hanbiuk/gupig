@@ -1,8 +1,8 @@
 package com.gupig.user.infra.account.mapper;
 
-import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.infra.account.dataobject.AccountDO;
-import com.gupig.user.infra.account.dataobject.AccountWithBizDataResult;
+import com.gupig.user.infra.account.dataquery.AccountDataQry;
+import com.gupig.user.infra.account.dataobject.AccountWithBizDataRes;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -63,11 +63,19 @@ public interface AccountMapper {
     Integer updateByCode(AccountDO record);
 
     /**
-     * 根据业务线获取账号信息
+     * 获取含当前业务线的账号信息
      *
-     * @param cmd 命令参数
+     * @param dataQry 数据查询参数
      * @return 账号及业务线结果
      */
-    AccountWithBizDataResult selectByBiz(AccountLogInCmd cmd);
+    AccountWithBizDataRes selectWithBiz(AccountDataQry dataQry);
+
+    /**
+     * 获取账号信息
+     *
+     * @param dataQry 数据查询参数
+     * @return 账号信息
+     */
+    AccountDO select(AccountDataQry dataQry);
 
 }

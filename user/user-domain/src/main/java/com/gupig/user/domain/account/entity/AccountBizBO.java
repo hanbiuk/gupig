@@ -59,11 +59,6 @@ public class AccountBizBO {
     private Integer status;
 
     /**
-     * 激活时间
-     */
-    private LocalDateTime cstActivate;
-
-    /**
      * 是否删除: 0-否, 1-是
      */
     private Integer isDeleted;

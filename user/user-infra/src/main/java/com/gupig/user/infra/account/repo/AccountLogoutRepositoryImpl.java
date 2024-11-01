@@ -5,6 +5,7 @@ import com.gupig.user.domain.account.entity.AccountLogoutBO;
 import com.gupig.user.domain.account.repo.AccountLogoutRepository;
 import com.gupig.user.infra.account.convertor.AccountLogoutConvertor;
 import com.gupig.user.infra.account.dataobject.AccountLogoutDO;
+import com.gupig.user.infra.account.dataquery.AccountLogoutDataQry;
 import com.gupig.user.infra.account.mapper.AccountLogoutMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Repository;
@@ -44,7 +45,8 @@ public class AccountLogoutRepositoryImpl implements AccountLogoutRepository {
      */
     @Override
     public Boolean hasLogout(UserContextDTO userContext) {
-        Integer hasLogout = accountLogoutMapper.hasLogout(userContext);
+        AccountLogoutDataQry dataQry = accountLogoutConvertor.toDataQry(userContext);
+        Integer hasLogout = accountLogoutMapper.hasLogout(dataQry);
         return hasLogout > 0;
     }
 

@@ -14,7 +14,6 @@
         <result property="portrait" column="portrait" jdbcType="VARCHAR"/>
         <result property="userDetail" column="user_detail" jdbcType="VARCHAR"/>
         <result property="status" column="status" jdbcType="TINYINT"/>
-        <result property="cstActivate" column="cst_activate" jdbcType="TIMESTAMP"/>
         <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
         <result property="creator" column="creator" jdbcType="VARCHAR"/>
         <result property="cstCreate" column="cst_create" jdbcType="TIMESTAMP"/>
@@ -27,7 +26,7 @@
         ,code,tenant_code,
         ua_code,biz_code,nickname,
         portrait,user_detail,status,
-        cst_activate,is_deleted,creator,
+        is_deleted,creator,
         cst_create,modifier,cst_modify
     </sql>
 
@@ -37,6 +36,24 @@
         from user_account_biz
         where is_deleted = 0
           and code = #{code}
+    </select>
+    <select id="select" resultType="com.gupig.user.infra.account.dataobject.AccountBizDO">
+        select
+        <include refid="Base_Column_List"/>
+        from user_account_biz
+        where is_deleted = 0
+        <if test="code != null">
+            and code = #{code}
+        </if>
+        <if test="tenantCode != null">
+            and tenant_code = #{tenantCode}
+        </if>
+        <if test="uaCode != null">
+            and ua_code = #{uaCode}
+        </if>
+        <if test="bizCode != null">
+            and biz_code = #{bizCode}
+        </if>
     </select>
 
     <update id="deleteByCode" parameterType="com.gupig.user.infra.account.dataobject.AccountBizDO">
@@ -52,12 +69,12 @@
         ( code, tenant_code
         , ua_code, biz_code, nickname
         , portrait, user_detail, status
-        , cst_activate, is_deleted, creator
+        , is_deleted, creator
         , cst_create, modifier, cst_modify)
         values ( #{code,jdbcType=VARCHAR}, #{tenantCode,jdbcType=VARCHAR}
                , #{uaCode,jdbcType=VARCHAR}, #{bizCode,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}
                , #{portrait,jdbcType=VARCHAR}, #{userDetail,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}
-               , #{cstActivate,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=TINYINT}, #{creator,jdbcType=VARCHAR}
+               , #{isDeleted,jdbcType=TINYINT}, #{creator,jdbcType=VARCHAR}
                , #{cstCreate,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, #{cstModify,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.gupig.user.infra.account.dataobject.AccountBizDO">
@@ -71,7 +88,6 @@
             <if test="portrait != null">portrait,</if>
             <if test="userDetail != null">user_detail,</if>
             <if test="status != null">status,</if>
-            <if test="cstActivate != null">cst_activate,</if>
             <if test="isDeleted != null">is_deleted,</if>
             <if test="creator != null">creator,</if>
             <if test="cstCreate != null">cst_create,</if>
@@ -87,7 +103,6 @@
             <if test="portrait != null">#{portrait,jdbcType=VARCHAR},</if>
             <if test="userDetail != null">#{userDetail,jdbcType=VARCHAR},</if>
             <if test="status != null">#{status,jdbcType=TINYINT},</if>
-            <if test="cstActivate != null">#{cstActivate,jdbcType=TIMESTAMP},</if>
             <if test="isDeleted != null">#{isDeleted,jdbcType=TINYINT},</if>
             <if test="creator != null">#{creator,jdbcType=VARCHAR},</if>
             <if test="cstCreate != null">#{cstCreate,jdbcType=TIMESTAMP},</if>
@@ -119,9 +134,6 @@
             <if test="status != null">
                 status = #{status,jdbcType=TINYINT},
             </if>
-            <if test="cstActivate != null">
-                cst_activate = #{cstActivate,jdbcType=TIMESTAMP},
-            </if>
             <if test="isDeleted != null">
                 is_deleted = #{isDeleted,jdbcType=TINYINT},
             </if>
@@ -150,7 +162,6 @@
             portrait     = #{portrait,jdbcType=VARCHAR},
             user_detail  = #{userDetail,jdbcType=VARCHAR},
             status       = #{status,jdbcType=TINYINT},
-            cst_activate = #{cstActivate,jdbcType=TIMESTAMP},
             is_deleted   = #{isDeleted,jdbcType=TINYINT},
             creator      = #{creator,jdbcType=VARCHAR},
             cst_create   = #{cstCreate,jdbcType=TIMESTAMP},

@@ -41,7 +41,7 @@ public class AccountLogInExe {
         this.validate(cmd);
 
         // 2. 获取业务线的账号
-        AccountAggBO accountAggBO = accountRepository.selectByBiz(cmd);
+        AccountAggBO accountAggBO = accountRepository.selectWithBiz(cmd);
 
         // 3. 账号不存在, 直接返回
         if (Objects.isNull(accountAggBO)) {
@@ -61,24 +61,19 @@ public class AccountLogInExe {
             return Result.fail(ResultStatusEnum.FUNCTION_IN_PROGRESS);
         }
 
-        // 5. 账号待激活
-        if (Objects.equals(AccountStatusEnum.INACTIVE.getCode(), accountAggBO.getStatus())) {
-            return Result.fail(ResultStatusEnum.ACCOUNT_STATUS_INACTIVE);
-        }
-
-        // 6. 主账号非启用状态
+        // 5. 主账号非启用状态
         if (!Objects.equals(AccountStatusEnum.ENABLE.getCode(), accountAggBO.getStatus())) {
             return Result.fail(ResultStatusEnum.ACCOUNT_STATUS_NOT_ENABLE,
                     "账号已" + AccountStatusEnum.of(accountAggBO.getStatus()).getDesc());
         }
 
-        // 7. 业务线账号非启用状态
+        // 6. 业务线账号非启用状态
         if (!Objects.equals(AccountStatusEnum.ENABLE.getCode(), accountAggBO.getAccountBizList().get(0).getStatus())) {
             return Result.fail(ResultStatusEnum.ACCOUNT_STATUS_NOT_ENABLE,
                     "账号已" + AccountStatusEnum.of(accountAggBO.getAccountBizList().get(0).getStatus()).getDesc());
         }
 
-        // 8. 登陆成功, 返回token
+        // 7. 登陆成功, 返回token
         String token = accountConvertor.buildToken(accountAggBO);
 
         return Result.success(token);

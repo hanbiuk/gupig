@@ -8,6 +8,7 @@ import com.gupig.user.domain.account.entity.AccountLogoutBO;
 import com.gupig.user.domain.account.repo.AccountLogoutRepository;
 import com.gupig.user.infra.account.convertor.AccountLogoutConvertor;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
  * @author hanbiuk
  * @date 2024-10-29
  */
+@Slf4j
 @Component
 public class AccountLogOutExe {
 
@@ -40,8 +42,9 @@ public class AccountLogOutExe {
         if (jwt.verify()) {
             // 3. 新增登出记录
             AccountLogoutBO accountLogoutBO = accountLogoutConvertor.buildAddBO(cmd);
-            Integer insert = accountLogoutRepository.add(accountLogoutBO);
-            if (insert <= 0) {
+            Integer insertAccountLogout = accountLogoutRepository.add(accountLogoutBO);
+            if (insertAccountLogout <= 0) {
+                log.error("AccountLogOutExe execute insertAccountLogout exception, {}", insertAccountLogout);
                 return Result.fail(ResultStatusEnum.SAVE_EXCEPTION);
             }
         }

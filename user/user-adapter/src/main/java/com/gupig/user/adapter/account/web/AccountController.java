@@ -3,6 +3,7 @@ package com.gupig.user.adapter.account.web;
 import com.gupig.user.client.account.api.AccountService;
 import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.client.account.dto.AccountLogOutCmd;
+import com.gupig.user.client.account.dto.AccountSignUpCmd;
 import com.gupig.user.client.common.dto.Result;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +38,7 @@ public class AccountController {
     /**
      * 登出
      *
+     * @param cmd 命令参数
      * @return 是否成功
      */
     @PostMapping("log/out")
@@ -47,11 +49,12 @@ public class AccountController {
     /**
      * 注册
      *
+     * @param cmd 命令参数
      * @return 是否成功
      */
     @PostMapping("sign/up")
-    public Result<Boolean> signUp() {
-        return accountService.signUp();
+    public Result<Boolean> signUp(@RequestBody AccountSignUpCmd cmd) {
+        return accountService.signUp(cmd);
     }
 
     /**

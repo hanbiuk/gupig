@@ -44,8 +44,9 @@ public enum ResultStatusEnum {
     /**
      * 账号
      */
-    ACCOUNT_STATUS_INACTIVE("10301", "账号未激活"),
-    ACCOUNT_STATUS_NOT_ENABLE("10302", "账号不是启用状态"),
+    ACCOUNT_STATUS_NOT_ENABLE("10301", "账号不是启用状态"),
+    ACCOUNT_EMAIL_SIGNED_UP("10302", "邮箱已注册"),
+    ACCOUNT_EMAIL_SIGNED_UP_PASSWORD_ERROR("10303", "邮箱已注册, 但密码不匹配"),
     ;
 
     /**

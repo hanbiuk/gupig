@@ -1,8 +1,10 @@
 package com.gupig.user.infra.account.convertor;
 
 import com.gupig.user.client.account.dto.AccountLogOutCmd;
+import com.gupig.user.client.common.dto.UserContextDTO;
 import com.gupig.user.domain.account.entity.AccountLogoutBO;
 import com.gupig.user.infra.account.dataobject.AccountLogoutDO;
+import com.gupig.user.infra.account.dataquery.AccountLogoutDataQry;
 import com.gupig.user.infra.common.until.SnowflakeCodeWorker;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -63,6 +65,26 @@ public class AccountLogoutConvertor {
         accountLogoutDO.setCode(SnowflakeCodeWorker.getInstance().nextId("UAL"));
 
         return accountLogoutDO;
+    }
+
+    /**
+     * 转换为 AccountLogoutDataQry
+     *
+     * @param userContext 用户上下文
+     * @return AccountLogoutDataQry
+     */
+    public AccountLogoutDataQry toDataQry(UserContextDTO userContext) {
+        if (Objects.isNull(userContext)) {
+            return null;
+        }
+
+        AccountLogoutDataQry accountLogoutDataQry = new AccountLogoutDataQry();
+        accountLogoutDataQry.setTenantCode(userContext.getOptTenantCode());
+        accountLogoutDataQry.setBizCode(userContext.getOptBizCode());
+        accountLogoutDataQry.setUaCode(userContext.getOptUaCode());
+        accountLogoutDataQry.setToken(userContext.getToken());
+
+        return accountLogoutDataQry;
     }
 
 }

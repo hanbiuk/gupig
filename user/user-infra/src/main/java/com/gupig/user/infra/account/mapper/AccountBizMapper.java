@@ -1,6 +1,7 @@
 package com.gupig.user.infra.account.mapper;
 
 import com.gupig.user.infra.account.dataobject.AccountBizDO;
+import com.gupig.user.infra.account.dataquery.AccountBizDataQry;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -59,5 +60,13 @@ public interface AccountBizMapper {
      * @return 受影响行数
      */
     Integer updateByCode(AccountBizDO record);
+
+    /**
+     * 获取账号业务线信息
+     *
+     * @param dataQry 数据查询参数
+     * @return 账号业务线信息
+     */
+    AccountBizDO select(AccountBizDataQry dataQry);
 
 }

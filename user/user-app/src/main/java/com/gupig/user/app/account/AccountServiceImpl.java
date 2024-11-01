@@ -2,9 +2,11 @@ package com.gupig.user.app.account;
 
 import com.gupig.user.app.account.executor.AccountLogInExe;
 import com.gupig.user.app.account.executor.AccountLogOutExe;
+import com.gupig.user.app.account.executor.AccountSignUpExe;
 import com.gupig.user.client.account.api.AccountService;
 import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.client.account.dto.AccountLogOutCmd;
+import com.gupig.user.client.account.dto.AccountSignUpCmd;
 import com.gupig.user.client.common.dto.Result;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,8 @@ public class AccountServiceImpl implements AccountService {
     private AccountLogInExe accountLogInExe;
     @Resource
     private AccountLogOutExe accountLogOutExe;
+    @Resource
+    private AccountSignUpExe accountSignUpExe;
 
     /**
      * 登陆
@@ -52,11 +56,12 @@ public class AccountServiceImpl implements AccountService {
     /**
      * 注册
      *
+     * @param cmd 命令参数
      * @return 是否成功
      */
     @Override
-    public Result<Boolean> signUp() {
-        return Result.success(true);
+    public Result<Boolean> signUp(AccountSignUpCmd cmd) {
+        return accountSignUpExe.execute(cmd);
     }
 
     /**
