@@ -1,15 +1,19 @@
 package com.gupig.user.infra.account.convertor;
 
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.jwt.JWT;
 import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.client.account.dto.AccountSignUpCmd;
+import com.gupig.user.client.account.enums.AccountStatusEnum;
 import com.gupig.user.domain.account.aggregate.AccountAggBO;
 import com.gupig.user.domain.account.entity.AccountBO;
 import com.gupig.user.domain.account.entity.AccountBizBO;
 import com.gupig.user.infra.account.config.TokenProperties;
 import com.gupig.user.infra.account.dataobject.AccountDO;
-import com.gupig.user.infra.account.dataquery.AccountDataQry;
 import com.gupig.user.infra.account.dataobject.AccountWithBizDataRes;
+import com.gupig.user.infra.account.dataquery.AccountDataQry;
+import com.gupig.user.infra.common.until.Digest;
+import com.gupig.user.infra.common.until.SnowflakeCodeWorker;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -124,6 +128,74 @@ public class AccountConvertor {
 
         dataQry.setUsername(null);
         return dataQry;
+    }
+
+    /**
+     * 转换为 AccountDataQry
+     *
+     * @param cmd 命令参数
+     * @return AccountDataQry
+     */
+    public AccountDataQry toNameDataQry(AccountSignUpCmd cmd) {
+        if (Objects.isNull(cmd)) {
+            return null;
+        }
+
+        AccountDataQry dataQry = new AccountDataQry();
+        BeanUtils.copyProperties(cmd, dataQry);
+
+        dataQry.setEmail(null);
+        return dataQry;
+    }
+
+    /**
+     * 构建 AccountBO
+     *
+     * @param cmd 命令参数
+     * @return AccountBO
+     */
+    public AccountBO buildAddBO(AccountSignUpCmd cmd) {
+        if (Objects.isNull(cmd)) {
+            return null;
+        }
+
+        AccountBO accountBO = new AccountBO();
+        BeanUtils.copyProperties(cmd, accountBO);
+
+        String uaCode = SnowflakeCodeWorker.getInstance().nextId("UA");
+        accountBO.setCode(uaCode);
+
+        String salt = RandomUtil.randomString(6);
+        accountBO.setSalt(salt);
+        String passwordDigest = Digest.md5WithSalt(cmd.getPassword(), salt);
+        accountBO.setPassword(passwordDigest);
+
+        accountBO.setStatus(AccountStatusEnum.ENABLE.getCode());
+
+        LocalDateTime now = LocalDateTime.now();
+        accountBO.setCreator(uaCode);
+        accountBO.setCstCreate(now);
+        accountBO.setModifier(uaCode);
+        accountBO.setCstModify(now);
+
+        return accountBO;
+    }
+
+    /**
+     * 转换为 AccountDO
+     *
+     * @param accountBO 业务对象
+     * @return AccountDO
+     */
+    public AccountDO toDO(AccountBO accountBO) {
+        if (Objects.isNull(accountBO)) {
+            return null;
+        }
+
+        AccountDO accountDO = new AccountDO();
+        BeanUtils.copyProperties(accountBO, accountDO);
+
+        return accountDO;
     }
 
 }

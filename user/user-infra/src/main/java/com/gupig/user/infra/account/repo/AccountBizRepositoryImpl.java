@@ -45,7 +45,7 @@ public class AccountBizRepositoryImpl implements AccountBizRepository {
      */
     @Override
     public Integer add(AccountBizBO accountBizBO) {
-        AccountBizDO accountBizDO = accountBizConvertor.toAddDO(accountBizBO);
+        AccountBizDO accountBizDO = accountBizConvertor.toDO(accountBizBO);
         return accountBizMapper.insertSelective(accountBizDO);
     }
 

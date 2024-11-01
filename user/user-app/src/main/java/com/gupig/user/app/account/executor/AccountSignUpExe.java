@@ -9,10 +9,13 @@ import com.gupig.user.domain.account.entity.AccountBizBO;
 import com.gupig.user.domain.account.repo.AccountBizRepository;
 import com.gupig.user.domain.account.repo.AccountRepository;
 import com.gupig.user.infra.account.convertor.AccountBizConvertor;
+import com.gupig.user.infra.account.convertor.AccountConvertor;
 import com.gupig.user.infra.common.until.Digest;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Objects;
 
@@ -27,12 +30,17 @@ import java.util.Objects;
 public class AccountSignUpExe {
 
     @Resource
+    private TransactionTemplate transactionTemplate;
+
+    @Resource
     private AccountRepository accountRepository;
     @Resource
     private AccountBizRepository accountBizRepository;
 
     @Resource
     private AccountBizConvertor accountBizConvertor;
+    @Autowired
+    private AccountConvertor accountConvertor;
 
     /**
      * 注册
@@ -105,11 +113,11 @@ public class AccountSignUpExe {
 
             // 3.3.2. 新增账号业务线记录
             AccountBizBO accountBizAddBO = accountBizConvertor.buildAddBO(accountBO, cmd);
-            Integer insertAccountBiz = accountBizRepository.add(accountBizAddBO);
+            Integer addAccountBiz = accountBizRepository.add(accountBizAddBO);
 
             // 3.3.2. 返回结果
-            if (insertAccountBiz <= 0) {
-                log.error("AccountSignUpExe execute insertAccountBiz exception, {}", insertAccountBiz);
+            if (addAccountBiz <= 0) {
+                log.error("AccountSignUpExe execute addAccountBiz exception, {}", addAccountBiz);
                 return Result.fail(ResultStatusEnum.SAVE_EXCEPTION);
             } else if (!Objects.equals(accountBO.getUsername(), cmd.getUsername())) {
                 return Result.success(ResultStatusEnum.ACCOUNT_EMAIL_SIGNED_UP.getMsg() + ", 用户名为: " + accountBO.getUsername(), true);
@@ -126,7 +134,38 @@ public class AccountSignUpExe {
      * @return 处理结果
      */
     private Result<Boolean> dealNotExistEmail(AccountSignUpCmd cmd) {
-        return Result.success(true);
+        // 1. 用户名是否已存在
+        AccountBO accountBO = accountRepository.selectByName(cmd);
+        if (Objects.nonNull(accountBO)) {
+            return Result.fail(ResultStatusEnum.ACCOUNT_USERNAME_EXIST);
+        }
+
+        Boolean executed = transactionTemplate.execute(status -> {
+            // 2. 新增账号记录
+            AccountBO accountAddBO = accountConvertor.buildAddBO(cmd);
+            Integer addAccount = accountRepository.add(accountAddBO);
+            if (addAccount <= 0) {
+                log.error("AccountSignUpExe dealNotExistEmail addAccount exception, {}", addAccount);
+                return false;
+            }
+
+            // 3. 新增账号业务线记录
+            AccountBizBO accountBizAddBO = accountBizConvertor.buildAddBO(accountAddBO, cmd);
+            Integer addAccountBiz = accountBizRepository.add(accountBizAddBO);
+            if (addAccountBiz <= 0) {
+                log.error("AccountSignUpExe dealNotExistEmail addAccountBiz exception, {}", addAccountBiz);
+                return false;
+            }
+
+            return true;
+        });
+
+        if (Boolean.TRUE.equals(executed)) {
+            log.error("AccountSignUpExe dealNotExistEmail addData exception");
+            return Result.fail(ResultStatusEnum.SAVE_EXCEPTION);
+        } else {
+            return Result.success(true);
+        }
     }
 
 }

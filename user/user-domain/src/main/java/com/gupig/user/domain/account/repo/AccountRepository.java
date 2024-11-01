@@ -29,4 +29,20 @@ public interface AccountRepository {
      */
     AccountBO selectByEmail(AccountSignUpCmd cmd);
 
+    /**
+     * 根据用户吗获取账号信息
+     *
+     * @param cmd 命令参数
+     * @return 账号信息
+     */
+    AccountBO selectByName(AccountSignUpCmd cmd);
+
+    /**
+     * 新增记录
+     *
+     * @param accountBO 账号信息
+     * @return 受影响行数
+     */
+    Integer add(AccountBO accountBO);
+
 }

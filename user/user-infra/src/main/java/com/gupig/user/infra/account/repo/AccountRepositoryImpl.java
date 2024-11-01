@@ -7,8 +7,8 @@ import com.gupig.user.domain.account.entity.AccountBO;
 import com.gupig.user.domain.account.repo.AccountRepository;
 import com.gupig.user.infra.account.convertor.AccountConvertor;
 import com.gupig.user.infra.account.dataobject.AccountDO;
-import com.gupig.user.infra.account.dataquery.AccountDataQry;
 import com.gupig.user.infra.account.dataobject.AccountWithBizDataRes;
+import com.gupig.user.infra.account.dataquery.AccountDataQry;
 import com.gupig.user.infra.account.mapper.AccountMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Repository;
@@ -52,6 +52,31 @@ public class AccountRepositoryImpl implements AccountRepository {
         AccountDataQry dataQry = accountConvertor.toEmailDataQry(cmd);
         AccountDO accountDO = accountMapper.select(dataQry);
         return accountConvertor.toBO(accountDO);
+    }
+
+    /**
+     * 根据用户名获取账号信息
+     *
+     * @param cmd 命令参数
+     * @return 账号信息
+     */
+    @Override
+    public AccountBO selectByName(AccountSignUpCmd cmd) {
+        AccountDataQry dataQry = accountConvertor.toNameDataQry(cmd);
+        AccountDO accountDO = accountMapper.select(dataQry);
+        return accountConvertor.toBO(accountDO);
+    }
+
+    /**
+     * 新增记录
+     *
+     * @param accountBO 账号信息
+     * @return 受影响行数
+     */
+    @Override
+    public Integer add(AccountBO accountBO) {
+        AccountDO accountDO = accountConvertor.toDO(accountBO);
+        return accountMapper.insertSelective(accountDO);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.gupig.user.infra.account.convertor;
 
 import com.gupig.user.client.account.dto.AccountSignUpCmd;
+import com.gupig.user.client.account.enums.AccountStatusEnum;
 import com.gupig.user.domain.account.entity.AccountBO;
 import com.gupig.user.domain.account.entity.AccountBizBO;
 import com.gupig.user.infra.account.dataobject.AccountBizDO;
@@ -78,10 +79,13 @@ public class AccountBizConvertor {
         AccountBizBO accountBizBO = new AccountBizBO();
         BeanUtils.copyProperties(accountBO, accountBizBO);
 
+        accountBizBO.setCode(SnowflakeCodeWorker.getInstance().nextId("UAB"));
+
         accountBizBO.setBizCode(cmd.getBizCode());
 
-        LocalDateTime now = LocalDateTime.now();
+        accountBizBO.setStatus(AccountStatusEnum.ENABLE.getCode());
 
+        LocalDateTime now = LocalDateTime.now();
         accountBizBO.setCreator(accountBO.getCreator());
         accountBizBO.setCstCreate(now);
         accountBizBO.setModifier(accountBO.getCreator());
@@ -96,15 +100,13 @@ public class AccountBizConvertor {
      * @param accountBizBO 业务对象
      * @return AccountBizDO
      */
-    public AccountBizDO toAddDO(AccountBizBO accountBizBO) {
+    public AccountBizDO toDO(AccountBizBO accountBizBO) {
         if (Objects.isNull(accountBizBO)) {
             return null;
         }
 
         AccountBizDO accountBizDO = new AccountBizDO();
         BeanUtils.copyProperties(accountBizBO, accountBizDO);
-
-        accountBizDO.setCode(SnowflakeCodeWorker.getInstance().nextId("UAB"));
 
         return accountBizDO;
     }

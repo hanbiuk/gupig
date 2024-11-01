@@ -32,14 +32,17 @@ public class AccountLogoutConvertor {
             return null;
         }
 
-        LocalDateTime now = LocalDateTime.now();
-
         AccountLogoutBO accountLogoutBO = new AccountLogoutBO();
+
+        accountLogoutBO.setCode(SnowflakeCodeWorker.getInstance().nextId("UAL"));
+
         accountLogoutBO.setTenantCode(cmd.getUserContext().getOptTenantCode());
         accountLogoutBO.setUaCode(cmd.getUserContext().getOptUaCode());
         accountLogoutBO.setBizCode(cmd.getUserContext().getOptBizCode());
         accountLogoutBO.setToken(cmd.getUserContext().getToken());
         accountLogoutBO.setCstExpire(cmd.getUserContext().getCstExpire());
+
+        LocalDateTime now = LocalDateTime.now();
         accountLogoutBO.setCreator(cmd.getUserContext().getOptUaCode());
         accountLogoutBO.setCstCreate(now);
         accountLogoutBO.setModifier(cmd.getUserContext().getOptUaCode());
@@ -54,15 +57,13 @@ public class AccountLogoutConvertor {
      * @param accountLogoutBO 业务对象
      * @return AccountLogoutDO
      */
-    public AccountLogoutDO toAddDO(AccountLogoutBO accountLogoutBO) {
+    public AccountLogoutDO toDO(AccountLogoutBO accountLogoutBO) {
         if (Objects.isNull(accountLogoutBO)) {
             return null;
         }
 
         AccountLogoutDO accountLogoutDO = new AccountLogoutDO();
         BeanUtils.copyProperties(accountLogoutBO, accountLogoutDO);
-
-        accountLogoutDO.setCode(SnowflakeCodeWorker.getInstance().nextId("UAL"));
 
         return accountLogoutDO;
     }

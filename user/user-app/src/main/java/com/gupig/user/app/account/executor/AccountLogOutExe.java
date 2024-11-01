@@ -42,9 +42,9 @@ public class AccountLogOutExe {
         if (jwt.verify()) {
             // 3. 新增登出记录
             AccountLogoutBO accountLogoutBO = accountLogoutConvertor.buildAddBO(cmd);
-            Integer insertAccountLogout = accountLogoutRepository.add(accountLogoutBO);
-            if (insertAccountLogout <= 0) {
-                log.error("AccountLogOutExe execute insertAccountLogout exception, {}", insertAccountLogout);
+            Integer addAccountLogout = accountLogoutRepository.add(accountLogoutBO);
+            if (addAccountLogout <= 0) {
+                log.error("AccountLogOutExe execute addAccountLogout exception, {}", addAccountLogout);
                 return Result.fail(ResultStatusEnum.SAVE_EXCEPTION);
             }
         }

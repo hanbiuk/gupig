@@ -47,6 +47,7 @@ public enum ResultStatusEnum {
     ACCOUNT_STATUS_NOT_ENABLE("10301", "账号不是启用状态"),
     ACCOUNT_EMAIL_SIGNED_UP("10302", "邮箱已注册"),
     ACCOUNT_EMAIL_SIGNED_UP_PASSWORD_ERROR("10303", "邮箱已注册, 但密码不匹配"),
+    ACCOUNT_USERNAME_EXIST("10304", "用户名已存在"),
     ;
 
     /**

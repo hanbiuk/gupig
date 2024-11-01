@@ -33,7 +33,7 @@ public class AccountLogoutRepositoryImpl implements AccountLogoutRepository {
      */
     @Override
     public Integer add(AccountLogoutBO accountLogoutBO) {
-        AccountLogoutDO accountLogoutDO = accountLogoutConvertor.toAddDO(accountLogoutBO);
+        AccountLogoutDO accountLogoutDO = accountLogoutConvertor.toDO(accountLogoutBO);
         return accountLogoutMapper.insertSelective(accountLogoutDO);
     }
 
