@@ -18,7 +18,7 @@ public class Digest {
      * @return 密文
      */
     public static String md5WithSalt(String str, String salt) {
-        return DigestUtil.md5Hex(str, salt);
+        return DigestUtil.md5Hex(str + salt);
     }
 
 }
