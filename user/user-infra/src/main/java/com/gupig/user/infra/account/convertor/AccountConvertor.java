@@ -1,6 +1,7 @@
 package com.gupig.user.infra.account.convertor;
 
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.jwt.JWT;
 import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.client.account.dto.AccountSignUpCmd;
@@ -12,7 +13,6 @@ import com.gupig.user.infra.account.config.TokenProperties;
 import com.gupig.user.infra.account.dataobject.AccountDO;
 import com.gupig.user.infra.account.dataobject.AccountWithBizDataRes;
 import com.gupig.user.infra.account.dataquery.AccountDataQry;
-import com.gupig.user.infra.common.until.Digest;
 import com.gupig.user.infra.common.until.SnowflakeCodeWorker;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
@@ -167,7 +167,7 @@ public class AccountConvertor {
 
         String salt = RandomUtil.randomString(6);
         accountBO.setSalt(salt);
-        String passwordDigest = Digest.md5WithSalt(cmd.getPassword(), salt);
+        String passwordDigest = DigestUtil.md5Hex(cmd.getPassword() + salt);
         accountBO.setPassword(passwordDigest);
 
         accountBO.setStatus(AccountStatusEnum.ENABLE.getCode());

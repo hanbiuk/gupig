@@ -1,6 +1,7 @@
 package com.gupig.user.app.account.executor;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import com.gupig.user.client.account.dto.AccountLogInCmd;
 import com.gupig.user.client.account.enums.AccountStatusEnum;
 import com.gupig.user.client.common.dto.Result;
@@ -9,7 +10,6 @@ import com.gupig.user.domain.account.aggregate.AccountAggBO;
 import com.gupig.user.domain.account.repo.AccountRepository;
 import com.gupig.user.infra.account.convertor.AccountConvertor;
 import com.gupig.user.infra.common.until.Assert;
-import com.gupig.user.infra.common.until.Digest;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
@@ -51,7 +51,7 @@ public class AccountLogInExe {
         // 4. 验证登陆
         // 4.1. 如果是密码登陆, 校验密码
         if (StrUtil.isNotBlank(cmd.getPassword())) {
-            String passwordDigest = Digest.md5WithSalt(cmd.getPassword(), accountAggBO.getSalt());
+            String passwordDigest = DigestUtil.md5Hex(cmd.getPassword() + accountAggBO.getSalt());
             if (!Objects.equals(accountAggBO.getPassword(), passwordDigest)) {
                 return Result.fail(ResultStatusEnum.DATA_NOT_EXIST, "user or verify error");
             }

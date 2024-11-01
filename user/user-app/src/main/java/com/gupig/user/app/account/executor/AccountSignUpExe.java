@@ -1,5 +1,6 @@
 package com.gupig.user.app.account.executor;
 
+import cn.hutool.crypto.digest.DigestUtil;
 import com.gupig.user.client.account.dto.AccountSignUpCmd;
 import com.gupig.user.client.account.enums.AccountStatusEnum;
 import com.gupig.user.client.common.dto.Result;
@@ -10,7 +11,6 @@ import com.gupig.user.domain.account.repo.AccountBizRepository;
 import com.gupig.user.domain.account.repo.AccountRepository;
 import com.gupig.user.infra.account.convertor.AccountBizConvertor;
 import com.gupig.user.infra.account.convertor.AccountConvertor;
-import com.gupig.user.infra.common.until.Digest;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +105,7 @@ public class AccountSignUpExe {
         // 3.3. 邮箱已注册, 业务线未注册
         else {
             // 3.3.1. 验证密码
-            String passwordDigest = Digest.md5WithSalt(cmd.getPassword(), accountBO.getSalt());
+            String passwordDigest = DigestUtil.md5Hex(cmd.getPassword() + accountBO.getSalt());
             if (!Objects.equals(accountBO.getPassword(), passwordDigest)) {
                 return Result.fail(ResultStatusEnum.ACCOUNT_EMAIL_SIGNED_UP_PASSWORD_ERROR,
                         ResultStatusEnum.ACCOUNT_EMAIL_SIGNED_UP_PASSWORD_ERROR.getMsg() + ", 无法关联该业务线");
