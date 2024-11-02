@@ -45,7 +45,7 @@ public class AccountSignDownExe {
         AccountBizBO accountBizQryBO = accountBizConvertor.buildQryBO(cmd);
         AccountBizBO accountBizBO = accountBizRepository.select(accountBizQryBO);
         if (Objects.equals(AccountStatusEnum.SIGN_DOWN.getCode(), accountBizBO.getStatus())) {
-            return Result.success("账号已销号", true);
+            return Result.success("account has signed down", true);
         }
 
         // 4. 注销业务线账号

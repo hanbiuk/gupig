@@ -68,13 +68,13 @@ public class AccountLogInExe {
         // 5. 主账号非启用状态
         if (!Objects.equals(AccountStatusEnum.ENABLE.getCode(), accountAggBO.getStatus())) {
             return Result.fail(ResultStatusEnum.ACCOUNT_STATUS_NOT_ENABLE,
-                    "账号已" + AccountStatusEnum.of(accountAggBO.getStatus()).getDesc());
+                    "account " + AccountStatusEnum.of(accountAggBO.getStatus()).getDesc());
         }
 
         // 6. 业务线账号非启用状态
         if (!Objects.equals(AccountStatusEnum.ENABLE.getCode(), accountAggBO.getAccountBizList().get(0).getStatus())) {
             return Result.fail(ResultStatusEnum.ACCOUNT_STATUS_NOT_ENABLE,
-                    "账号已" + AccountStatusEnum.of(accountAggBO.getAccountBizList().get(0).getStatus()).getDesc());
+                    "account " + AccountStatusEnum.of(accountAggBO.getAccountBizList().get(0).getStatus()).getDesc());
         }
 
         // 7. 登陆成功, 返回token

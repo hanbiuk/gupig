@@ -19,13 +19,14 @@ public enum AccountStatusEnum {
     /**
      * 账号状态: 1-启用, 2-禁用, 3-销号
      */
-    ENABLE(1, "启用"),
-    DISABLE(2, "禁用"),
-    SIGN_DOWN(3, "销号"),
+    ENABLE(1, "enable", "启用"),
+    DISABLE(2, "disable", "禁用"),
+    SIGN_DOWN(3, "sign down", "销号"),
     ;
 
     private final Integer code;
     private final String desc;
+    private final String descCn;
 
     public static AccountStatusEnum of(Integer code) {
         return Stream.of(values())

@@ -112,7 +112,7 @@ public class AccountSignUpExe {
         // 3.1. 邮箱已注册, 账户非启用状态
         if (!Objects.equals(AccountStatusEnum.ENABLE.getCode(), accountBO.getStatus())) {
             return Result.fail(ResultStatusEnum.ACCOUNT_STATUS_NOT_ENABLE,
-                    "邮箱已注册, 账号已" + AccountStatusEnum.of(accountBO.getStatus()).getDesc());
+                    "email has signed up, account " + AccountStatusEnum.of(accountBO.getStatus()).getDesc());
         }
 
         // 3.2. 邮箱已注册, 业务线已注册, 账户非启用状态
@@ -121,7 +121,7 @@ public class AccountSignUpExe {
         if (Objects.nonNull(accountBizBO)
                 && !Objects.equals(AccountStatusEnum.ENABLE.getCode(), accountBizBO.getStatus())) {
             return Result.fail(ResultStatusEnum.ACCOUNT_STATUS_NOT_ENABLE,
-                    "邮箱已注册, 账号已" + AccountStatusEnum.of(accountBizBO.getStatus()).getDesc());
+                    "email has signed up, account " + AccountStatusEnum.of(accountBizBO.getStatus()).getDesc());
         }
         // 3.2. 邮箱已注册, 业务线已注册, 账户启用状态
         else if (Objects.nonNull(accountBizBO)
@@ -134,7 +134,7 @@ public class AccountSignUpExe {
             String passwordDigest = DigestUtil.md5Hex(cmd.getPassword() + accountBO.getSalt());
             if (!Objects.equals(accountBO.getPassword(), passwordDigest)) {
                 return Result.fail(ResultStatusEnum.ACCOUNT_EMAIL_SIGNED_UP_PASSWORD_ERROR,
-                        ResultStatusEnum.ACCOUNT_EMAIL_SIGNED_UP_PASSWORD_ERROR.getMsg() + ", 无法关联该业务线");
+                        ResultStatusEnum.ACCOUNT_EMAIL_SIGNED_UP_PASSWORD_ERROR.getMsg() + ", cannot relate the biz");
             }
 
             // 3.3.2. 新增账号业务线记录
@@ -146,7 +146,7 @@ public class AccountSignUpExe {
                 log.error("AccountSignUpExe execute addAccountBiz exception, {}", addAccountBiz);
                 return Result.fail(ResultStatusEnum.SAVE_EXCEPTION);
             } else if (!Objects.equals(accountBO.getUsername(), cmd.getUsername())) {
-                return Result.success(ResultStatusEnum.ACCOUNT_EMAIL_SIGNED_UP.getMsg() + ", 用户名为: " + accountBO.getUsername(), true);
+                return Result.success(ResultStatusEnum.ACCOUNT_EMAIL_SIGNED_UP.getMsg() + ", username is " + accountBO.getUsername(), true);
             } else {
                 return Result.success(true);
             }
