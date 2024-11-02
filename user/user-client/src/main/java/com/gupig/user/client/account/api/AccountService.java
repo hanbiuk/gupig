@@ -1,9 +1,6 @@
 package com.gupig.user.client.account.api;
 
-import com.gupig.user.client.account.dto.AccountLogInCmd;
-import com.gupig.user.client.account.dto.AccountLogOutCmd;
-import com.gupig.user.client.account.dto.AccountSignInCmd;
-import com.gupig.user.client.account.dto.AccountSignUpCmd;
+import com.gupig.user.client.account.dto.*;
 import com.gupig.user.client.common.dto.Result;
 import jakarta.validation.Valid;
 
@@ -50,8 +47,9 @@ public interface AccountService {
     /**
      * 销号
      *
+     * @param cmd 命令参数
      * @return 是否成功
      */
-    Result<Boolean> signDown();
+    Result<Boolean> signDown(@Valid AccountSignDownCmd cmd);
 
 }

@@ -49,4 +49,16 @@ public class AccountBizRepositoryImpl implements AccountBizRepository {
         return accountBizMapper.insertSelective(accountBizDO);
     }
 
+    /**
+     * 更新状态
+     *
+     * @param accountBizBO 账号业务线信息
+     * @return 受影响行数
+     */
+    @Override
+    public Integer updateStatus(AccountBizBO accountBizBO) {
+        AccountBizDO accountBizDO = accountBizConvertor.toDO(accountBizBO);
+        return accountBizMapper.updateByCodeSelective(accountBizDO);
+    }
+
 }

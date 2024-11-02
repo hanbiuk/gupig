@@ -26,4 +26,12 @@ public interface AccountBizRepository {
      */
     Integer add(AccountBizBO accountBizBO);
 
+    /**
+     * 更新状态
+     *
+     * @param accountBizBO 账号业务线信息
+     * @return 受影响行数
+     */
+    Integer updateStatus(AccountBizBO accountBizBO);
+
 }

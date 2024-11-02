@@ -1,10 +1,7 @@
 package com.gupig.user.adapter.account.web;
 
 import com.gupig.user.client.account.api.AccountService;
-import com.gupig.user.client.account.dto.AccountLogInCmd;
-import com.gupig.user.client.account.dto.AccountLogOutCmd;
-import com.gupig.user.client.account.dto.AccountSignInCmd;
-import com.gupig.user.client.account.dto.AccountSignUpCmd;
+import com.gupig.user.client.account.dto.*;
 import com.gupig.user.client.common.dto.Result;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,11 +69,12 @@ public class AccountController {
     /**
      * 销号
      *
+     * @param cmd 命令参数
      * @return 是否成功
      */
     @PostMapping("sign/down")
-    public Result<Boolean> signDown() {
-        return accountService.signDown();
+    public Result<Boolean> signDown(@RequestBody AccountSignDownCmd cmd) {
+        return accountService.signDown(cmd);
     }
 
 }

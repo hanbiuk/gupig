@@ -1,5 +1,6 @@
 package com.gupig.user.infra.account.convertor;
 
+import com.gupig.user.client.account.dto.AccountSignDownCmd;
 import com.gupig.user.client.account.dto.AccountSignUpCmd;
 import com.gupig.user.client.account.enums.AccountStatusEnum;
 import com.gupig.user.domain.account.entity.AccountBO;
@@ -127,6 +128,20 @@ public class AccountBizConvertor {
     }
 
     /**
+     * 构建 AccountBizBO
+     *
+     * @param cmd 命令参数
+     * @return AccountBizBO
+     */
+    public AccountBizBO buildQryBO(AccountSignDownCmd cmd) {
+        AccountBizBO accountBizBO = new AccountBizBO();
+        accountBizBO.setTenantCode(cmd.getUserContext().getOptTenantCode());
+        accountBizBO.setBizCode(cmd.getUserContext().getOptBizCode());
+        accountBizBO.setUaCode(cmd.getUserContext().getOptUaCode());
+        return accountBizBO;
+    }
+
+    /**
      * 转换为 AccountBizDataQry
      *
      * @param accountBizBO 业务对象
@@ -140,6 +155,29 @@ public class AccountBizConvertor {
         AccountBizDataQry accountBizDataQry = new AccountBizDataQry();
         BeanUtils.copyProperties(accountBizBO, accountBizDataQry);
         return accountBizDataQry;
+    }
+
+    /**
+     * 构建 AccountBizBO
+     *
+     * @param accountBizBO 账号业务线信息
+     * @param cmd          命令参数
+     * @return AccountBizBO
+     */
+    public AccountBizBO buildStatusBO(AccountBizBO accountBizBO, AccountSignDownCmd cmd) {
+        if (Objects.isNull(cmd)) {
+            return null;
+        }
+
+        AccountBizBO accountStatusBizBO = new AccountBizBO();
+        accountStatusBizBO.setCode(accountBizBO.getCode());
+        accountStatusBizBO.setTenantCode(cmd.getUserContext().getOptTenantCode());
+        accountStatusBizBO.setUaCode(cmd.getUserContext().getOptUaCode());
+        accountStatusBizBO.setBizCode(cmd.getUserContext().getOptBizCode());
+        accountStatusBizBO.setStatus(AccountStatusEnum.SIGN_DOWN.getCode());
+        accountStatusBizBO.setModifier(cmd.getUserContext().getOptUaCode());
+        accountStatusBizBO.setCstModify(LocalDateTime.now());
+        return accountStatusBizBO;
     }
 
 }
