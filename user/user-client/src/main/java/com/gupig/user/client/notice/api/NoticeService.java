@@ -17,9 +17,9 @@ public interface NoticeService {
      * 获取验证码
      *
      * @param cmd 命令参数
-     * @return 是否成功
+     * @return 请求编码
      */
-    Result<Boolean> verificationGet(@Valid NoticeVerificationGetCmd cmd);
+    Result<String> verificationGet(@Valid NoticeVerificationGetCmd cmd);
 
     /**
      * 获取图形验证码

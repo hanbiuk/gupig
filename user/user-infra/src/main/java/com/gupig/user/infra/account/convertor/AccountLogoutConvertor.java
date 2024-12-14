@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Objects;
 
 /**
@@ -42,7 +43,7 @@ public class AccountLogoutConvertor {
         accountLogoutBO.setToken(cmd.getUserContext().getToken());
         accountLogoutBO.setCstExpire(cmd.getUserContext().getCstExpire());
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
         accountLogoutBO.setCreator(cmd.getUserContext().getOptUaCode());
         accountLogoutBO.setCstCreate(now);
         accountLogoutBO.setModifier(cmd.getUserContext().getOptUaCode());

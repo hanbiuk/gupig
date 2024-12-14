@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Objects;
 
 /**
@@ -86,7 +87,7 @@ public class AccountBizConvertor {
         accountBizBO.setUaCode(accountBO.getCode());
         accountBizBO.setStatus(AccountStatusEnum.ENABLE.getCode());
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
         accountBizBO.setCreator(accountBO.getCreator());
         accountBizBO.setCstCreate(now);
         accountBizBO.setModifier(accountBO.getCreator());
@@ -176,7 +177,7 @@ public class AccountBizConvertor {
         accountStatusBizBO.setBizCode(cmd.getUserContext().getOptBizCode());
         accountStatusBizBO.setStatus(AccountStatusEnum.SIGN_DOWN.getCode());
         accountStatusBizBO.setModifier(cmd.getUserContext().getOptUaCode());
-        accountStatusBizBO.setCstModify(LocalDateTime.now());
+        accountStatusBizBO.setCstModify(LocalDateTime.now(ZoneId.of("Asia/Shanghai")));
         return accountStatusBizBO;
     }
 

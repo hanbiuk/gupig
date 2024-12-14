@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gupig.user.infra.notice.mapper.NoticeVerificationMapper">
+
+    <resultMap id="BaseResultMap" type="com.gupig.user.infra.notice.dataobject.NoticeVerificationDO">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="code" column="code" jdbcType="VARCHAR"/>
+        <result property="tenantCode" column="tenant_code" jdbcType="VARCHAR"/>
+        <result property="bizCode" column="biz_code" jdbcType="VARCHAR"/>
+        <result property="functionCode" column="function_code" jdbcType="VARCHAR"/>
+        <result property="touchMeans" column="touch_means" jdbcType="VARCHAR"/>
+        <result property="userIdentity" column="user_identity" jdbcType="VARCHAR"/>
+        <result property="requestCode" column="request_code" jdbcType="VARCHAR"/>
+        <result property="verification" column="verification" jdbcType="VARCHAR"/>
+        <result property="cstExpire" column="cst_expire" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="creator" column="creator" jdbcType="VARCHAR"/>
+        <result property="cstCreate" column="cst_create" jdbcType="TIMESTAMP"/>
+        <result property="modifier" column="modifier" jdbcType="VARCHAR"/>
+        <result property="cstModify" column="cst_modify" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,code,tenant_code,
+        biz_code,function_code,touch_means,
+        user_identity,request_code,verification,
+        cst_expire,is_deleted,creator,
+        cst_create,modifier,cst_modify
+    </sql>
+
+    <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_notice_verification
+        where code = #{code}
+    </select>
+
+    <delete id="deleteExpired">
+        delete
+        from user_notice_verification
+        where cst_expire &lt; #{cstExpire}
+    </delete>
+
+    <update id="deleteByCode" parameterType="com.gupig.user.infra.notice.dataobject.NoticeVerificationDO">
+        update user_notice_verification
+        set is_deleted = 1,
+            modifier   = #{modifier},
+            cst_modify = #{cstModify}
+        where is_deleted = 0
+          and code = #{code}
+    </update>
+
+    <insert id="insert" keyColumn="id" keyProperty="id"
+            parameterType="com.gupig.user.infra.notice.dataobject.NoticeVerificationDO"
+            useGeneratedKeys="true">
+        insert into user_notice_verification
+        ( id, code, tenant_code
+        , biz_code, function_code, touch_means
+        , user_identity, request_code, verification
+        , cst_expire, is_deleted, creator
+        , cst_create, modifier, cst_modify)
+        values ( #{id,jdbcType=BIGINT}, #{code,jdbcType=VARCHAR}, #{tenantCode,jdbcType=VARCHAR}
+               , #{bizCode,jdbcType=VARCHAR}, #{functionCode,jdbcType=VARCHAR}, #{touchMeans,jdbcType=VARCHAR}
+               , #{userIdentity,jdbcType=VARCHAR}, #{requestCode,jdbcType=VARCHAR}, #{verification,jdbcType=VARCHAR}
+               , #{cstExpire,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=TINYINT}, #{creator,jdbcType=VARCHAR}
+               , #{cstCreate,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, #{cstModify,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.gupig.user.infra.notice.dataobject.NoticeVerificationDO"
+            useGeneratedKeys="true">
+        insert into user_notice_verification
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="code != null">code,</if>
+            <if test="tenantCode != null">tenant_code,</if>
+            <if test="bizCode != null">biz_code,</if>
+            <if test="functionCode != null">function_code,</if>
+            <if test="touchMeans != null">touch_means,</if>
+            <if test="userIdentity != null">user_identity,</if>
+            <if test="requestCode != null">request_code,</if>
+            <if test="verification != null">verification,</if>
+            <if test="cstExpire != null">cst_expire,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="creator != null">creator,</if>
+            <if test="cstCreate != null">cst_create,</if>
+            <if test="modifier != null">modifier,</if>
+            <if test="cstModify != null">cst_modify,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="code != null">#{code,jdbcType=VARCHAR},</if>
+            <if test="tenantCode != null">#{tenantCode,jdbcType=VARCHAR},</if>
+            <if test="bizCode != null">#{bizCode,jdbcType=VARCHAR},</if>
+            <if test="functionCode != null">#{functionCode,jdbcType=VARCHAR},</if>
+            <if test="touchMeans != null">#{touchMeans,jdbcType=VARCHAR},</if>
+            <if test="userIdentity != null">#{userIdentity,jdbcType=VARCHAR},</if>
+            <if test="requestCode != null">#{requestCode,jdbcType=VARCHAR},</if>
+            <if test="verification != null">#{verification,jdbcType=VARCHAR},</if>
+            <if test="cstExpire != null">#{cstExpire,jdbcType=TIMESTAMP},</if>
+            <if test="isDeleted != null">#{isDeleted,jdbcType=TINYINT},</if>
+            <if test="creator != null">#{creator,jdbcType=VARCHAR},</if>
+            <if test="cstCreate != null">#{cstCreate,jdbcType=TIMESTAMP},</if>
+            <if test="modifier != null">#{modifier,jdbcType=VARCHAR},</if>
+            <if test="cstModify != null">#{cstModify,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+    <update id="updateByCodeSelective"
+            parameterType="com.gupig.user.infra.notice.dataobject.NoticeVerificationDO">
+        update user_notice_verification
+        <set>
+            <if test="tenantCode != null">
+                tenant_code = #{tenantCode,jdbcType=VARCHAR},
+            </if>
+            <if test="bizCode != null">
+                biz_code = #{bizCode,jdbcType=VARCHAR},
+            </if>
+            <if test="functionCode != null">
+                function_code = #{functionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="touchMeans != null">
+                touch_means = #{touchMeans,jdbcType=VARCHAR},
+            </if>
+            <if test="userIdentity != null">
+                user_identity = #{userIdentity,jdbcType=VARCHAR},
+            </if>
+            <if test="requestCode != null">
+                request_code = #{requestCode,jdbcType=VARCHAR},
+            </if>
+            <if test="verification != null">
+                verification = #{verification,jdbcType=VARCHAR},
+            </if>
+            <if test="cstExpire != null">
+                cst_expire = #{cstExpire,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="cstCreate != null">
+                cst_create = #{cstCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="cstModify != null">
+                cst_modify = #{cstModify,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where is_deleted = 0
+        and code = #{code}
+    </update>
+    <update id="updateByCode" parameterType="com.gupig.user.infra.notice.dataobject.NoticeVerificationDO">
+        update user_notice_verification
+        set code          = #{code,jdbcType=VARCHAR},
+            tenant_code   = #{tenantCode,jdbcType=VARCHAR},
+            biz_code      = #{bizCode,jdbcType=VARCHAR},
+            function_code = #{functionCode,jdbcType=VARCHAR},
+            touch_means   = #{touchMeans,jdbcType=VARCHAR},
+            user_identity = #{userIdentity,jdbcType=VARCHAR},
+            request_code  = #{requestCode,jdbcType=VARCHAR},
+            verification  = #{verification,jdbcType=VARCHAR},
+            cst_expire    = #{cstExpire,jdbcType=TIMESTAMP},
+            is_deleted    = #{isDeleted,jdbcType=TINYINT},
+            creator       = #{creator,jdbcType=VARCHAR},
+            cst_create    = #{cstCreate,jdbcType=TIMESTAMP},
+            modifier      = #{modifier,jdbcType=VARCHAR},
+            cst_modify    = #{cstModify,jdbcType=TIMESTAMP}
+        where is_deleted = 0
+          and code = #{code}
+    </update>
+</mapper>

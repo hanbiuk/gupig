@@ -7,6 +7,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +36,7 @@ public class ContextConvertor {
         payloads.put("uaCode", userContext.getOptUaCode());
         payloads.put("username", userContext.getOptUsername());
         payloads.put("nickname", userContext.getOptNickname());
-        payloads.put("cstExpire", LocalDateTime.now().plusDays(tokenProperties.getExpireDays()));
+        payloads.put("cstExpire", LocalDateTime.now(ZoneId.of("Asia/Shanghai")).plusDays(tokenProperties.getExpireDays()));
         return JWT.create()
                 .addPayloads(payloads)
                 .setKey(tokenProperties.getKey().getBytes())

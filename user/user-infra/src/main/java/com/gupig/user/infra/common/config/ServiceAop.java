@@ -25,6 +25,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -160,7 +161,7 @@ public class ServiceAop {
 
         // 5. 验证过期时间
         LocalDateTime cstExpire = jwt.getPayloads().get("cstExpire", LocalDateTime.class);
-        if (cstExpire.isBefore(LocalDateTime.now())) {
+        if (cstExpire.isBefore(LocalDateTime.now(ZoneId.of("Asia/Shanghai")))) {
             throw new BizException(ResultStatusEnum.AUTHORIZATION_EXPIRE.getCode(), ResultStatusEnum.AUTHORIZATION_EXPIRE.getMsg());
         }
 

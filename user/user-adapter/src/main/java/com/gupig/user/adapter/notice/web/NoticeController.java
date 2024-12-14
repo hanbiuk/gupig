@@ -27,10 +27,10 @@ public class NoticeController {
      * 获取验证码
      *
      * @param cmd 命令参数
-     * @return 是否成功
+     * @return 请求编码
      */
     @PostMapping("verification/get")
-    public Result<Boolean> verificationGet(@RequestBody NoticeVerificationGetCmd cmd) {
+    public Result<String> verificationGet(@RequestBody NoticeVerificationGetCmd cmd) {
         return noticeService.verificationGet(cmd);
     }
 

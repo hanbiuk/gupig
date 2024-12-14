@@ -18,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -178,7 +179,7 @@ public class AccountConvertor {
 
         accountBO.setStatus(AccountStatusEnum.ENABLE.getCode());
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
         accountBO.setCreator(uaCode);
         accountBO.setCstCreate(now);
         accountBO.setModifier(uaCode);

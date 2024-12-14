@@ -31,10 +31,10 @@ public class NoticeServiceImpl implements NoticeService {
      * 获取验证码
      *
      * @param cmd 命令参数
-     * @return 是否成功
+     * @return 请求编码
      */
     @Override
-    public Result<Boolean> verificationGet(NoticeVerificationGetCmd cmd) {
+    public Result<String> verificationGet(NoticeVerificationGetCmd cmd) {
         return noticeVerificationGetExe.execute(cmd);
     }
 
